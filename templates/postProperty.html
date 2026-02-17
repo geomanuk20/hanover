@@ -1,0 +1,650 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Property Basic Info | HANOVER{% endblock %}
+
+{% block content %}
+<div class="container">
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Breadcrumb styles */
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Section headers */
+        .section-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 30px 0 20px 0;
+            color: #222;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* Benefit cards */
+        .benefit-card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .benefit-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .benefit-list {
+            padding-left: 20px;
+        }
+        
+        .benefit-list li {
+            margin-bottom: 8px;
+        }
+        
+        /* Form section */
+        .form-section {
+            margin-top: 40px;
+        }
+        
+        .form-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        /* Input and select styles */
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        
+        select.form-control {
+            height: 46px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .char-count {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Radio and option styles */
+        .radio-group {
+            margin-top: 10px;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-option {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .radio-option input {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        /* Property type grid */
+        .property-type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .property-type-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .property-type-card:hover {
+            border-color: #4CAF50;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .property-type-card.active {
+            border-color: #4CAF50;
+            background-color: #f0f9f0;
+        }
+        
+        .property-type-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+            object-fit: contain;
+        }
+        
+        .property-type-name {
+            font-weight: 500;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        /* Transaction and ownership types */
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .option-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-card:hover {
+            border-color: #4CAF50;
+        }
+        
+        .option-card.active {
+            border-color: #4CAF50;
+            background-color: #f0f9f0;
+        }
+        
+        /* Button styles */
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+        
+        /* Divider styles */
+        .divider {
+            border-top: 1px solid #eee;
+            margin: 25px 0;
+        }
+        
+        /* Price range section */
+        .price-range-section {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .section-header {
+                font-size: 22px;
+            }
+            
+            .benefit-card {
+                padding: 15px;
+            }
+            
+            .property-type-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+            }
+            
+            .property-type-card {
+                padding: 10px;
+            }
+            
+            .property-type-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .section-header {
+                font-size: 20px;
+            }
+            
+            .benefit-title {
+                font-size: 16px;
+            }
+            
+            .form-title {
+                font-size: 16px;
+            }
+            
+            .property-type-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .option-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-primary {
+                width: 100%;
+                padding: 14px;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+
+    <nav id="mainNav">
+        <ul class="nav-links">
+            <li><a href="{% url 'propertysale'%}">Properties for Sale</a></li>
+            <li><a href="{% url 'propertyRent' %}">Properties for Rent</a></li>
+            <li><a href="{% url 'propertyPremium'%}">Premium projects</a></li>
+            <li><a href="{% url 'finance' %}">Finance Center</a></li>
+            <li><a href="{% url 'ourService' %}">Our Services</a></li>
+            <li><a href="{% url 'contactUs' %}">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <a href="{% url 'home'%}">Home</a> / <a href="{% url 'myAccount' %}">My Account</a> / <strong>Property Basic Info</strong>
+    </div>
+    
+    <h1 class="section-header">Property Basic Info</h1>
+    
+    <!-- Benefits of Photos & Videos Section -->
+    <div class="benefit-card">
+        <h2 class="benefit-title">Benefits of Photos & Videos</h2>
+        <p>A picture can speak a thousand words, so upload a picture which will describe your property very better than words.</p>
+        <ul class="benefit-list">
+            <li>It can fetch more views for your property</li>
+            <li>More the traffic, better the chances of getting potential buyers for your property</li>
+            <li>Gives better and more idea about the appearance of your property</li>
+        </ul>
+    </div>
+    
+    <!-- Benefits of Featured Listing Section -->
+    <div class="benefit-card">
+        <h2 class="benefit-title">Benefits of Featured Listing</h2>
+        <p>Get yourself a featured listing and be proud to be prioritized.</p>
+        <ul class="benefit-list">
+            <li>Be among the first properties in a search result page</li>
+            <li>Get more views, hence more attention from potential buyers</li>
+            <li>Upload more photos and grab more updates</li>
+        </ul>
+    </div>
+    
+    <!-- Basic Info Form Section -->
+    <form method="post" action="{% url 'postProperty' %}" class="form-section">
+        {% csrf_token %}
+        
+        <h2 class="section-header">Basic Info</h2>
+        
+        <div class="form-group">
+            <label class="form-label required-field">Post Property In</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="english" name="language" value="english" checked>
+                    <label for="english">English</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="malayalam" name="language" value="malayalam">
+                    <label for="malayalam">Malayalam</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label required-field">Property Type</label>
+            
+            <div class="property-type-grid">
+                <div class="property-type-card" data-value="residential-apartment">
+                    <img src="https://cdn-icons-png.flaticon.com/512/619/619153.png" alt="Apartment" class="property-type-icon">
+                    <div class="property-type-name">Residential Apartment</div>
+                </div>
+                
+                <div class="property-type-card" data-value="residential-house">
+                    <img src="https://cdn-icons-png.flaticon.com/512/619/619034.png" alt="House" class="property-type-icon">
+                    <div class="property-type-name">Residential House/Villa</div>
+                </div>
+                
+                <div class="property-type-card" data-value="residential-land">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3208/3208726.png" alt="Land" class="property-type-icon">
+                    <div class="property-type-name">Residential Land</div>
+                </div>
+                
+                <div class="property-type-card" data-value="residential-other">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3029/3029514.png" alt="Other Residential" class="property-type-icon">
+                    <div class="property-type-name">Residential Other</div>
+                </div>
+                
+                <div class="property-type-card" data-value="commercial-shop">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3079/3079165.png" alt="Shop" class="property-type-icon">
+                    <div class="property-type-name">Commercial Shop</div>
+                </div>
+                
+                <div class="property-type-card" data-value="commercial-office">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3050/3050521.png" alt="Office" class="property-type-icon">
+                    <div class="property-type-name">Commercial Office</div>
+                </div>
+                
+                <div class="property-type-card" data-value="commercial-land">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3208/3208726.png" alt="Commercial Land" class="property-type-icon">
+                    <div class="property-type-name">Commercial Land</div>
+                </div>
+                
+                <div class="property-type-card" data-value="commercial-building">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3069/3069172.png" alt="Building" class="property-type-icon">
+                    <div class="property-type-name">Commercial Building</div>
+                </div>
+                
+                <div class="property-type-card" data-value="commercial-other">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3029/3029514.png" alt="Other Commercial" class="property-type-icon">
+                    <div class="property-type-name">Commercial Other</div>
+                </div>
+                
+                <div class="property-type-card" data-value="industrial-building">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2458/2458336.png" alt="Industrial Building" class="property-type-icon">
+                    <div class="property-type-name">Industrial Building</div>
+                </div>
+                
+                <div class="property-type-card" data-value="industrial-land">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3208/3208726.png" alt="Industrial Land" class="property-type-icon">
+                    <div class="property-type-name">Industrial Land</div>
+                </div>
+                
+                <div class="property-type-card" data-value="agricultural-land">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2920/2920244.png" alt="Agricultural Land" class="property-type-icon">
+                    <div class="property-type-name">Agricultural Land</div>
+                </div>
+            </div>
+            
+            <input type="hidden" id="property-type-input" name="property_type" required>
+        </div>
+        
+        <!-- Transaction and Ownership in same row -->
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label class="form-label required-field">Transaction Type</label>
+                    <div class="option-group">
+                        <div class="option-card" data-value="sale">
+                            Sale
+                        </div>
+                        <div class="option-card" data-value="rent">
+                            Rent
+                        </div>
+                    </div>
+                    <input type="hidden" id="transaction-type-input" name="transaction_type" required>
+                </div>
+            </div>
+            
+            <div class="form-col">
+                <div class="form-group">
+                    <label class="form-label required-field">Ownership Type</label>
+                    <div class="option-group">
+                        <div class="option-card" data-value="single">
+                            Single
+                        </div>
+                        <div class="option-card" data-value="joint">
+                            Joint
+                        </div>
+                        <div class="option-card" data-value="trust">
+                            Trust
+                        </div>
+                        <div class="option-card" data-value="other">
+                            Other
+                        </div>
+                    </div>
+                    <input type="hidden" id="ownership-type-input" name="ownership_type" required>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Price Range Toggle -->
+        <div class="form-group">
+            <label class="form-label required-field">Do you want to set a price range?</label>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="price-yes" name="set_price" value="yes">
+                    <label for="price-yes">Yes</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="price-no" name="set_price" value="no" checked>
+                    <label for="price-no">No</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Price Range Section (hidden by default) -->
+        <div class="price-range-section" id="price-range-section">
+            <div class="form-group">
+                <label class="form-label required-field">Price Range</label>
+                <select class="form-control" id="price-range" name="price_range">
+                    <option value="" disabled selected>-- Select --</option>
+                    <option value="not_provided">Price not provided</option>
+                    <option value="1-5">1 Lac to 5 Lac</option>
+                    <option value="5-10">5 Lac to 10 Lac</option>
+                    <option value="10-15">10 Lac to 15 Lac</option>
+                    <option value="15-20">15 Lac to 20 Lac</option>
+                    <option value="20-25">20 Lac to 25 Lac</option>
+                    <option value="25-30">25 Lac to 30 Lac</option>
+                    <option value="30-35">30 Lac to 35 Lac</option>
+                    <option value="35-40">35 Lac to 40 Lac</option>
+                    <option value="40-45">40 Lac to 45 Lac</option>
+                    <option value="45-50">45 Lac to 50 Lac</option>
+                    <option value="50-55">50 Lac to 55 Lac</option>
+                    <option value="55-60">55 Lac to 60 Lac</option>
+                    <option value="60-65">60 Lac to 65 Lac</option>
+                    <option value="65-70">65 Lac to 70 Lac</option>
+                    <option value="70-75">70 Lac to 75 Lac</option>
+                    <option value="75-80">75 Lac to 80 Lac</option>
+                    <option value="80-85">80 Lac to 85 Lac</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="form-group">
+            <label class="form-label required-field">Property Description</label>
+            <textarea class="form-control" id="property-description" name="property_description" minlength="50" maxlength="2000" required></textarea>
+            <div class="char-count">Minimum 50 and Maximum 2000 characters</div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="form-group">
+            <label class="form-label">Proximity</label>
+            <textarea class="form-control" id="proximity" name="proximity" maxlength="500"></textarea>
+            <div class="char-count">Enter details about how close the property is to important amenities or locations. Maximum 500 characters</div>
+        </div>
+        
+        <div class="form-group" style="margin-top: 40px;">
+            <button type="submit" class="btn-primary">Save & Continue</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Property type selection
+        const propertyTypeCards = document.querySelectorAll('.property-type-card');
+        propertyTypeCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                propertyTypeCards.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Update hidden input value
+                document.getElementById('property-type-input').value = this.dataset.value;
+            });
+        });
+        
+        // Transaction type selection
+        const transactionCards = document.querySelectorAll('[data-value="sale"], [data-value="rent"]');
+        transactionCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                transactionCards.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Update hidden input value
+                document.getElementById('transaction-type-input').value = this.dataset.value;
+            });
+        });
+        
+        // Ownership type selection
+        const ownershipCards = document.querySelectorAll('[data-value="single"], [data-value="joint"], [data-value="trust"], [data-value="other"]');
+        ownershipCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                ownershipCards.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Update hidden input value
+                document.getElementById('ownership-type-input').value = this.dataset.value;
+            });
+        });
+
+        // Price range toggle
+        const priceYes = document.getElementById('price-yes');
+        const priceNo = document.getElementById('price-no');
+        const priceRangeSection = document.getElementById('price-range-section');
+        const priceRangeSelect = document.getElementById('price-range');
+        
+        function togglePriceRange() {
+            if (priceYes.checked) {
+                priceRangeSection.style.display = 'block';
+                priceRangeSelect.required = true;
+            } else {
+                priceRangeSection.style.display = 'none';
+                priceRangeSelect.required = false;
+                priceRangeSelect.value = '';
+            }
+        }
+        
+        priceYes.addEventListener('change', togglePriceRange);
+        priceNo.addEventListener('change', togglePriceRange);
+        
+        // Initialize
+        togglePriceRange();
+
+        // Character count validation for textareas
+        const propertyDescription = document.getElementById('property-description');
+        const proximity = document.getElementById('proximity');
+        
+        propertyDescription.addEventListener('input', function() {
+            const charCount = this.value.length;
+            if (charCount < 50) {
+                this.setCustomValidity(`Minimum 50 characters required (${50 - charCount} more needed)`);
+            } else if (charCount > 2000) {
+                this.setCustomValidity(`Maximum 2000 characters exceeded by ${charCount - 2000}`);
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        proximity.addEventListener('input', function() {
+            const charCount = this.value.length;
+            if (charCount > 500) {
+                this.setCustomValidity(`Maximum 500 characters exceeded by ${charCount - 500}`);
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    });
+</script>
+{% endblock %}

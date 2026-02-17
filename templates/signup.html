@@ -1,0 +1,583 @@
+{% load socialaccount %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANOVER - Account</title>
+    <link rel="icon" href="{% static 'img/real state logo.jpeg' %}" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-container {
+            width: 75%;
+            height: auto;
+            min-height: 85vh;
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .left-image {
+            flex: 1;
+            background: url('{% static "img/gods own country.jpg" %}') center/cover no-repeat;
+            display: none;
+        }
+
+        .right-form {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .form-toggle {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .toggle-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            position: relative;
+        }
+
+        .toggle-btn.active {
+            color: #0066cc;
+        }
+
+        .toggle-btn.active::after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #0066cc;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .phone-input {
+            display: flex;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .country-code {
+            padding: 12px 15px;
+            background: #f5f5f5;
+            border-right: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .phone-field {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .terms {
+            font-size: 12px;
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.5;
+        }
+
+        .captcha {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #0066cc;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #0055aa;
+        }
+
+        .divider {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .social-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .form-control.error {
+            border-color: #ff3860;
+        }
+        
+        .phone-input.error {
+            border-color: #ff3860;
+        }
+        
+        .error-message {
+            color: #ff3860;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Updated media queries */
+        @media (min-width: 768px) {
+            .left-image {
+                display: block;
+            }
+
+            .main-container {
+                height: 75vh;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .main-container {
+                width: 90%;
+                height: auto;
+                flex-direction: column;
+            }
+
+            .left-image {
+                display: none;
+            }
+
+            .container {
+                padding: 30px 20px;
+            }
+
+            .phone-input {
+                flex-direction: column;
+            }
+
+            .country-code {
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                width: 95%;
+                height: auto;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .toggle-btn {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+
+            .social-btn {
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+   <div class="main-container">
+        <div class="left-image"></div>
+
+        <div class="right-form">
+            <div class="container">
+                <div class="header">
+                    <div class="logo">
+                        <img src="{% static 'img/real state logo.jpeg' %}" alt="HANOVER Logo">
+                        HANOVER
+                    </div>
+                </div>
+
+                <div class="form-toggle">
+                    <button type="button" class="toggle-btn active" id="signupBtn">Sign Up</button>
+                    <button type="button" class="toggle-btn" id="signinBtn"><a href="{% url 'login' %}" style="text-decoration: none; color: inherit;">Sign In</a></button>
+                </div>
+
+                <!-- Sign Up Form -->
+                <form id="signupForm" method="post">
+                    {% csrf_token %}
+                    
+                    <h1 class="title">Create Account</h1>
+                    <p class="subtitle">Get started with your account</p>
+
+                    <div class="form-group">
+                        <label for="username">Full Name</label>
+                        <input type="text" id="username" name="username" class="form-control" 
+                               placeholder="Enter your full name" required
+                               value="{{ form.username.value|default:'' }}">
+                        {% if form.username.errors %}
+                            <div class="text-danger">
+                                {{ form.username.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group" id="phoneEmailGroup">
+                        <label id="phoneEmailLabel">Phone Number</label>
+                        <div class="phone-input" id="phoneInput">
+                            <div class="country-code">+91</div>
+                            <input type="text" id="phone" name="phone" class="phone-field" 
+                                   placeholder="Enter your phone number" required
+                                   value="{{ form.phone.value|default:'' }}">
+                        </div>
+                        <input type="email" id="emailField" name="email" class="form-control" 
+                               placeholder="Enter your email" style="display: none;"
+                               value="{{ form.email.value|default:'' }}">
+                        {% if form.phone.errors %}
+                            <div class="text-danger">
+                                {{ form.phone.errors }}
+                            </div>
+                        {% endif %}
+                        {% if form.email.errors %}
+                            <div class="text-danger">
+                                {{ form.email.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password1">Password</label>
+                        <input type="password" id="id_password1" name="password1" class="form-control" 
+                               placeholder="Create a password" required>
+                        {% if form.password1.errors %}
+                            <div class="text-danger">
+                                {{ form.password1.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_password2">Confirm Password</label>
+                        <input type="password" id="id_password2" name="password2" class="form-control" 
+                               placeholder="Confirm your password" required>
+                        {% if form.password2.errors %}
+                            <div class="text-danger">
+                                {{ form.password2.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <p class="terms">
+                        By continuing, you agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+                    </p>
+
+                    <p class="captcha">
+                        This site is protected by reCAPTCHA and the <a href="#">Google Privacy Policy</a> and <a href="#">Terms of Service</a> apply.
+                    </p>
+
+                    <button type="submit" class="btn">Create Account</button>
+
+                    <div class="divider">OR CONTINUE WITH</div>
+
+                    <div class="social-login">
+                        <button type="button" class="social-btn" id="toggleEmailBtn">
+                            <i class="fas fa-phone" id="emailPhoneIcon"></i>
+                        </button>
+                        <button type="button" class="social-btn">
+                            <a style="text-decoration: none; color: inherit;" href="{% provider_login_url 'google' %}" class="social-btn"><i class="fab fa-google"></i></a>
+                            
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleEmailBtn = document.getElementById('toggleEmailBtn');
+            const phoneInput = document.getElementById('phoneInput');
+            const emailField = document.getElementById('emailField');
+            const phoneEmailLabel = document.getElementById('phoneEmailLabel');
+            const emailPhoneIcon = document.getElementById('emailPhoneIcon');
+
+            let usingEmail = false;
+
+            // Form validation functions
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            function validatePhone(phone) {
+                return /^[0-9]{10}$/.test(phone);
+            }
+
+            function showError(input, message) {
+                const formControl = input.closest('.form-group');
+                const errorMsg = formControl.querySelector('.error-message') || document.createElement('small');
+                
+                if (!formControl.querySelector('.error-message')) {
+                    errorMsg.className = 'error-message';
+                    formControl.appendChild(errorMsg);
+                }
+                
+                input.classList.add('error');
+                if (input.closest('.phone-input')) {
+                    input.closest('.phone-input').classList.add('error');
+                }
+                errorMsg.textContent = message;
+                errorMsg.style.display = 'block';
+            }
+
+            function removeError(input) {
+                const formControl = input.closest('.form-group');
+                const errorMsg = formControl.querySelector('.error-message');
+                
+                input.classList.remove('error');
+                if (input.closest('.phone-input')) {
+                    input.closest('.phone-input').classList.remove('error');
+                }
+                if (errorMsg) {
+                    errorMsg.style.display = 'none';
+                }
+            }
+
+            // Sign Up Form Validation
+            document.getElementById('signupForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Validate name
+                const name = document.getElementById('username');
+                if (!name.value.trim()) {
+                    showError(name, 'Full name is required');
+                    isValid = false;
+                } else {
+                    removeError(name);
+                }
+                
+                // Validate phone/email
+                let contactInput, contactValue;
+                if (usingEmail) {
+                    contactInput = document.getElementById('emailField');
+                    contactValue = contactInput.value.trim();
+                    if (!contactValue) {
+                        showError(contactInput, 'Email is required');
+                        isValid = false;
+                    } else if (!validateEmail(contactValue)) {
+                        showError(contactInput, 'Please enter a valid email');
+                        isValid = false;
+                    } else {
+                        removeError(contactInput);
+                    }
+                } else {
+                    contactInput = document.getElementById('phone');
+                    contactValue = contactInput.value.trim();
+                    if (!contactValue) {
+                        showError(contactInput, 'Phone number is required');
+                        isValid = false;
+                    } else if (!validatePhone(contactValue)) {
+                        showError(contactInput, 'Please enter a valid 10-digit phone number');
+                        isValid = false;
+                    } else {
+                        removeError(contactInput);
+                    }
+                }
+                
+                // Validate password
+                const password1 = document.getElementById('id_password1');
+                const password2 = document.getElementById('id_password2');
+                
+                if (!password1.value) {
+                    showError(password1, 'Password is required');
+                    isValid = false;
+                } else if (password1.value.length < 6) {
+                    showError(password1, 'Password must be at least 6 characters');
+                    isValid = false;
+                } else {
+                    removeError(password1);
+                }
+                
+                if (!password2.value) {
+                    showError(password2, 'Please confirm your password');
+                    isValid = false;
+                } else if (password1.value !== password2.value) {
+                    showError(password2, 'Passwords do not match');
+                    isValid = false;
+                } else {
+                    removeError(password2);
+                }
+                
+                if (isValid) {
+                    this.submit();
+                }
+            });
+
+            // Toggle between phone and email
+            toggleEmailBtn.addEventListener('click', function () {
+                usingEmail = !usingEmail;
+
+                if (usingEmail) {
+                    phoneInput.style.display = 'none';
+                    emailField.style.display = 'block';
+                    emailField.required = true;
+                    document.getElementById('phone').required = false;
+                    phoneEmailLabel.textContent = 'Email Address';
+                    emailPhoneIcon.classList.remove('fa-phone');
+                    emailPhoneIcon.classList.add('fa-envelope');
+                } else {
+                    phoneInput.style.display = 'flex';
+                    emailField.style.display = 'none';
+                    emailField.required = false;
+                    document.getElementById('phone').required = true;
+                    phoneEmailLabel.textContent = 'Phone Number';
+                    emailPhoneIcon.classList.remove('fa-envelope');
+                    emailPhoneIcon.classList.add('fa-phone');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

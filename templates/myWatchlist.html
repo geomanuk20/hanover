@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Watchlist | HANOVER{% endblock %}
+
+{% block content %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .breadcrumb {
+            padding: 15px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .account-container {
+            display: flex;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .sidebar h3 {
+            padding: 0 20px 15px;
+            border-bottom: 1px solid #3d5166;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar li:before {
+            
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        
+        
+        .sidebar li:hover {
+            background: #3d5166;
+        }
+        
+        .sidebar li.active {
+            background: #3498db;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .section-header h2 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        
+        .add-property-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .add-property-btn:hover {
+            background: #2980b9;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 20px;
+            color: #666;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="#">Home</a> / <a href="#">My Account</a> / <a href="#">My Property Listings</a>
+        </div>
+        
+        <h1>My Account Overview</h1>
+        
+        <div class="account-container">
+            <div class="sidebar">
+                <h3><a style="text-decoration: none; color: white;" href="{% url 'myAccount' %}">Dashboard</a></h3>
+                <ul>
+                    <li>My Properties</li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'myRequirement' %}">My Requirements</a></li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'manageMedia' %}">Manage Media</a></li>
+                    <li>My Messages</li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'paymentHistory' %}">Payment History</a></li>
+                    <li>Saved Searches</li>
+                    <li>Contact Views</li>
+                    <li>My Alerts</li>
+                    <li class="active">My Watchlist</li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <div class="section-header">
+                    <h2>My Watchlist</h2>
+                </div>
+                
+                <div class="empty-state">
+                    No favourite found!
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

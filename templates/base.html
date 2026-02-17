@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HANOVER{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/real state logo.jpeg' %}" type="image/png">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="{% url 'home'%}"><img src="{% static 'img/real state logo.jpeg' %}" alt="Real Estate Logo"></a>
+        </div>
+
+        <div class="header-right">
+            <div class="contact-number">
+                <img width="20" height="20" src="https://img.icons8.com/ios-filled/50/headset.png" alt="headset">
+                <span>+191 123 456 7890</span>
+            </div>
+
+            <div class="header-buttons">
+                <button class="header-btn"><a style="text-decoration: none;color: white;"
+                        href="{% url 'postProperty'%}">Post Properties</a></button>
+                <button class="header-btn"><a style="text-decoration: none;color: white;"
+                        href="{% url 'postRequirement'%}">Post requirement</a></button>
+                    {% if user.is_authenticated %}
+                         <a style="text-decoration: none; color: white;" href="{% url 'myAccount' %}"><button class="header-btn username-btn">{{ user.username }}</button></a>
+                        <button class="header-btn logout-btn">
+                        <a style="text-decoration: none; color: white;" href="{% url 'logout' %}">Logout</a>
+                    </button>
+                    {% else %}
+                    <button class="header-btn login-btn">
+                        <a style="text-decoration: none; color: white;" href="{% url 'signup'  %}">Login</a>
+                    {% endif %}
+                </button>
+            </div>
+
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="real-estate-footer">
+        <div class="footer-main">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="{% static 'img/real state logo.jpeg' %}" alt="Real Estate Logo">
+                        <h3>Real Estate All Kerala</h3>
+                    </div>
+                    <p class="footer-about">Your trusted partner for all real estate needs across Kerala. We specialize
+                        in residential, commercial, and agricultural properties throughout God's Own Country.</p>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-map-marker-alt"></i> Head Office: MG Road, Kochi, Kerala</p>
+                        <p><i class="fas fa-phone"></i> +91 123 456 7890</p>
+                        <p><i class="fas fa-envelope"></i> info@realestateallkerala.com</p>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Our Services</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Properties</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Agents</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Testimonials</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Our Services</h4>
+                    <ul class="footer-services">
+                        <li><a href="#"><i class="fas fa-home"></i> Residential Properties</a></li>
+                        <li><a href="#"><i class="fas fa-building"></i> Commercial Properties</a></li>
+                        <li><a href="#"><i class="fas fa-tractor"></i> Agricultural Lands</a></li>
+                        <li><a href="#"><i class="fas fa-key"></i> Rental Management</a></li>
+                        <li><a href="#"><i class="fas fa-file-signature"></i> Legal Services</a></li>
+                        <li><a href="#"><i class="fas fa-search-dollar"></i> Property Valuation</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Kerala Locations</h4>
+                    <div class="location-grid">
+                        <a href="#">Thiruvananthapuram</a>
+                        <a href="#">Kollam</a>
+                        <a href="#">Pathanamthitta</a>
+                        <a href="#">Alappuzha</a>
+                        <a href="#">Kottayam</a>
+                        <a href="#">Idukki</a>
+                        <a href="#">Ernakulam</a>
+                        <a href="#">Thrissur</a>
+                        <a href="#">Palakkad</a>
+                        <a href="#">Malappuram</a>
+                        <a href="#">Kozhikode</a>
+                        <a href="#">Wayanad</a>
+                        <a href="#">Kannur</a>
+                        <a href="#">Kasaragod</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-socials">
+                <h4>Connect With Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+
+            <div class="legal-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+
+            <p class="copyright">© 2023 Real Estate All Kerala. All Rights Reserved. | Registered under RERA No:
+                KA123456789</p>
+        </div>
+    </footer>
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us | HANOVER{% endblock %}
+
+{% block content %}
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Breadcrumb styles */
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-separator {
+            color: #999;
+        }
+
+        /* Header styles */
+        .page-header {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #222;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Intro section */
+        .intro-section {
+            margin-bottom: 30px;
+        }
+
+        .intro-section p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #444;
+        }
+
+        /* Contact info */
+        .contact-info {
+            margin-bottom: 40px;
+        }
+
+        .contact-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-item strong {
+            min-width: 80px;
+            display: inline-block;
+            color: #333;
+        }
+
+        /* Office hours - new two-column layout */
+        .office-section {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .office-hours {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .office-hours p {
+            margin-bottom: 10px;
+        }
+
+        .office-image {
+            flex: 1;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .office-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .office-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Offices grid */
+        .offices-header {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .offices-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .office-city {
+            text-align: center;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .office-city:hover {
+            background-color: #e0e0e0;
+        }
+
+        .office-city a {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .offices-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .office-section {
+                flex-direction: column;
+            }
+            
+            .office-image {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .page-header {
+                font-size: 24px;
+            }
+
+            .offices-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .contact-item {
+                flex-direction: column;
+            }
+
+            .contact-item strong {
+                margin-bottom: 5px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .offices-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page-header {
+                font-size: 22px;
+            }
+
+            .offices-header {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .offices-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .breadcrumb {
+                font-size: 13px;
+            }
+        }
+    </style>
+
+    <nav id="mainNav">
+        <ul class="nav-links">
+            <li><a href="{% url 'propertysale'%}">Properties for Sale</a></li>
+            <li><a href="{% url 'propertyRent' %}">Properties for Rent</a></li>
+            <li><a href="{% url 'propertyPremium'%}">Premium projects</a></li>
+            <li><a href="{% url 'finance' %}">Finance Center</a></li>
+            <li><a href="{% url 'ourService' %}">Our Services</a></li>
+            <li><a href="{% url 'contactUs' %}">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Breadcrumb Navigation -->
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <strong>Contact Us</strong>
+        </div>
+
+        <h1 class="page-header">Contact Us</h1>
+
+        <!-- Intro Section -->
+        <div class="intro-section">
+            <p>Do you need our help? You have any queries to clarify? Or you need someone to guide you with the site?</p>
+            <p>Feel free to contact us, our team is always happy to help.</p>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="contact-info">
+            <div class="contact-item">
+                <strong>Address:</strong>
+                <span>Malayala Manorama, P.B. No. 26, K.K. Road, Kattayam - 686 001</span>
+            </div>
+            <div class="contact-item">
+                <strong>Email:</strong>
+                <span><a href="mailto:hello@hanover.com">hello@hanover.com</a></span>
+            </div>
+            <div class="contact-item">
+                <strong>Phone:</strong>
+                <span><a href="tel:+9104812587202">+91 - 0481 - 2587202</a></span>
+            </div>
+            <div class="contact-item">
+                <strong>Fax:</strong>
+                <span>+91 - 481 - 2565399</span>
+            </div>
+        </div>
+
+        <!-- Office Hours - New two-column layout -->
+        <div class="office-section">
+            <div class="office-hours">
+                <h3>Office Hours & Registration</h3>
+                <p>Need help in registering your property on our site? Walk in to our office with property details and a photograph, our customer care team will guide you through the process without any hassle.</p>
+                <p>All our offices can offer you service from Monday to Saturday between 9 am to 6pm.</p>
+            </div>
+            <div class="office-image">
+                <!-- Using a placeholder image from Picsum Photos -->
+                <img src="https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                     alt="HANOVER Office Building" 
+                     title="Modern office building with glass facade">
+            </div>
+        </div>
+
+        <!-- Offices Grid -->
+        <h2 class="offices-header">HANOVER Offices</h2>
+        <p>Click on the city link below to find your nearest HANOVER office address.</p>
+        
+        <div class="offices-grid">
+            <div class="office-city"><a href="#">Alappuzha</a></div>
+            <div class="office-city"><a href="#">Bangalore</a></div>
+            <div class="office-city"><a href="#">Chennai</a></div>
+            <div class="office-city"><a href="#">Coimbatore</a></div>
+            <div class="office-city"><a href="#">Guruvayur</a></div>
+            <div class="office-city"><a href="#">Hyderabad</a></div>
+            <div class="office-city"><a href="#">Kannur</a></div>
+            <div class="office-city"><a href="#">Kochi</a></div>
+            <div class="office-city"><a href="#">Kolkata</a></div>
+            <div class="office-city"><a href="#">Kollam</a></div>
+            <div class="office-city"><a href="#">Kottayam</a></div>
+            <div class="office-city"><a href="#">Kozhikode</a></div>
+            <div class="office-city"><a href="#">Malappuram</a></div>
+            <div class="office-city"><a href="#">Mumbai</a></div>
+            <div class="office-city"><a href="#">New Delhi</a></div>
+            <div class="office-city"><a href="#">Palakkad</a></div>
+            <div class="office-city"><a href="#">Pathanamthitta</a></div>
+            <div class="office-city"><a href="#">Pune</a></div>
+            <div class="office-city"><a href="#">Thiruvananthapuram</a></div>
+            <div class="office-city"><a href="#">Thrissur</a></div>
+        </div>
+    </div>
+{% endblock %}

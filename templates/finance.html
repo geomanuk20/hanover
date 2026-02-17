@@ -1,0 +1,552 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Finance Center | HANOVER{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .breadcrumb {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+    h1 {
+        color: #2c3e50;
+        margin-bottom: 25px;
+        font-weight: 600;
+    }
+
+    .intro-text {
+        margin-bottom: 35px;
+        line-height: 1.7;
+        color: #555;
+    }
+
+    /* Main container styling */
+    .loan-container {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    /* Card-like containers */
+    .form-section,
+    .emi-calculator {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-section:hover,
+    .emi-calculator:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .section-title {
+        color: #2c3e50;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #eaeaea;
+        font-weight: 600;
+        font-size: 1.4rem;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="password"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-size: 0.95rem;
+        transition: border-color 0.3s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+
+    .required::after {
+        content: " *";
+        color: #e74c3c;
+    }
+
+    /* Calculator specific styles */
+    .emi-calculator {
+        background: linear-gradient(135deg, #f5f9ff 0%, #e8f1ff 100%);
+        border: 1px solid #e0e8f5;
+    }
+
+    .calculator-results {
+        margin-top: 25px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 6px;
+        border: 1px solid #e0e8f5;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .result-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px dashed #eee;
+    }
+
+    .result-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .result-label {
+        font-weight: 500;
+        color: #555;
+    }
+
+    .result-value {
+        font-family: 'Courier New', monospace;
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    /* Layout adjustments */
+    .loan-application {
+        flex: 1.2;
+    }
+
+    .calculator-wrapper {
+        flex: 1;
+    }
+
+    /* Responsive layout */
+    @media (max-width: 768px) {
+        .loan-container {
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-section,
+        .emi-calculator {
+            padding: 20px;
+        }
+    }
+
+    /* Button styling */
+    .submit-btn {
+        background: linear-gradient(to right, #2c3e50, #4a6491);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .submit-btn:hover {
+        background: linear-gradient(to right, #1a252f, #3a506e);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form section subtitle */
+    .form-section h3 {
+        color: #3a506e;
+        margin-top: 25px;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    /* Input group enhancements */
+    .input-group {
+        position: relative;
+    }
+
+    .input-group span {
+        position: absolute;
+        right: 10px;
+        top: 38px;
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+
+    /* CAPTCHA styling */
+    .captcha-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .refresh-captcha {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-left: 10px;
+        transition: color 0.3s;
+    }
+
+    .refresh-captcha:hover {
+        color: #2980b9;
+        text-decoration: underline;
+    }
+
+    .captcha-image {
+        /* ... existing styles ... */
+        transition: transform 0.2s ease;
+    }
+
+    .captcha-image {
+        background-color: #f0f0f0;
+        padding: 8px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        letter-spacing: 2px;
+        user-select: none;
+    }
+
+    /* Other occupation field styling */
+    .other-occupation-container {
+        display: none;
+        margin-top: 10px;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<nav id="mainNav">
+        <ul class="nav-links">
+            <li><a href="{% url 'propertysale'%}">Properties for Sale</a></li>
+            <li><a href="{% url 'propertyRent' %}">Properties for Rent</a></li>
+            <li><a href="{% url 'propertyPremium'%}">Premium projects</a></li>
+            <li><a href="{% url 'finance' %}">Finance Center</a></li>
+            <li><a href="{% url 'ourService' %}">Our Services</a></li>
+            <li><a href="{% url 'contactUs' %}">Contact Us</a></li>
+        </ul>
+    </nav>
+
+<div class="container">
+    <div class="breadcrumb">
+        <a style="text-decoration: none;" href="{% url 'home' %}">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <strong>finance center</strong>
+    </div>
+
+    <h1>Home Loan Application</h1>
+
+    <div class="intro-text">
+        <p>A home is close to the heart of the owner and is a cherished possession. Home and hearth have a lure that is
+            incomparable. And to design a home in one's desire is truly a dream come true. Amid the euphoria of
+            envisioning your new home comes the sobering reality of shopping for a loan. It's time consuming, complex
+            and a bit daunting. But, if you are ready with the right questions and the right documents, this shopping
+            becomes an easier process. You can of course afford your home with the right loan. Use this calculator to
+            compute your affordability in buying the home of your dreams.</p>
+    </div>
+
+    <div class="loan-container">
+        <div class="loan-application">
+            <div class="form-section">
+                <h2 class="section-title">Home Loan Application</h2>
+                <p>You can fill in the following form and apply for home loan.</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <h3>Personal Details</h3>
+
+                    <div class="form-group">
+                        <label for="name" class="required">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age" class="required">Age (Yrs)</label>
+                        <input type="number" id="age" name="age" required min="18" max="70">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="occupation" class="required">Occupation</label>
+                        <select id="occupation" name="occupation" required>
+                            <option value="">--- Select ---</option>
+                            <option value="salaried">Salaried</option>
+                            <option value="self-employed">Self Employed</option>
+                            <option value="business">Business</option>
+                            <option value="professional">Professional</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <div class="other-occupation-container" id="other-occupation-container">
+                            <label for="other-occupation" class="required">Please specify your occupation</label>
+                            <input type="text" id="other-occupation" name="other_occupation">
+                        </div>
+                    </div>
+
+                    <h3>Contact Details</h3>
+
+                    <div class="form-group">
+                        <label for="telephone" class="required">Telephone</label>
+                        <input type="tel" id="telephone" name="telephone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="required">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <h3>Loan Details</h3>
+
+                    <div class="form-group">
+                        <label for="loan-amount" class="required">Loan Amount (₹)</label>
+                        <input type="number" id="loan-amount-form" name="loan_amount" required min="100000"
+                            step="10000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="property-location" class="required">Location of Property</label>
+                        <input type="text" id="property-location" name="property_location" required
+                            placeholder="City/District where property is located">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="property-address" class="required">Complete Property Address</label>
+                        <textarea id="property-address" name="property_address" rows="3" required class="form-control"
+                            placeholder="Please fill the complete address of the property"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nearest-bank" class="required">Nearest Bank Branch</label>
+                        <select id="nearest-bank" name="nearest_bank" required>
+                            <option value="">--- Select ---</option>
+                            <option value="sbi">State Bank of India</option>
+                            <option value="hdfc">HDFC Bank</option>
+                            <option value="icici">ICICI Bank</option>
+                            <option value="axis">Axis Bank</option>
+                            <option value="other">Other Bank</option>
+                        </select>
+                    </div>
+
+                    <h3>Income Details</h3>
+
+                    <div class="form-group">
+                        <label for="monthly-income" class="required">Net Monthly Income (₹)</label>
+                        <input type="number" id="monthly-income" name="monthly_income" required min="10000" step="1000">
+                    </div>
+
+                    <h3>Verification</h3>
+
+                    <div class="form-group">
+                        <label for="captcha" class="required">Type the characters as in the picture</label>
+                        <div class="captcha-container">
+                            <div class="captcha-image" id="captcha-image">A7B9C3</div>
+                            <a href="#" id="refresh-captcha" class="refresh-captcha">Refresh</a>
+                            <input type="text" id="captcha" name="captcha" required maxlength="6"
+                                placeholder="Enter CAPTCHA">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Application</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="calculator-wrapper">
+            <div class="emi-calculator">
+                <h2 class="section-title">EMI Calculator</h2>
+
+                <div class="form-group input-group">
+                    <label for="loan-amount">Loan Amount</label>
+                    <input type="number" id="loan-amount" name="loan-amount" value="2500000" min="100000" step="100000">
+                    <span>₹</span>
+                </div>
+
+                <div class="form-group input-group">
+                    <label for="interest-rate">Interest Rate</label>
+                    <input type="number" id="interest-rate" name="interest-rate" value="8.5" min="1" max="20"
+                        step="0.1">
+                    <span>%</span>
+                </div>
+
+                <div class="form-group input-group">
+                    <label for="loan-tenure">Loan Tenure</label>
+                    <input type="number" id="loan-tenure" name="loan-tenure" value="20" min="1" max="30">
+                    <span>years</span>
+                </div>
+
+                <button id="calculate-btn" class="submit-btn">Calculate EMI</button>
+
+                <div class="calculator-results">
+                    <div class="result-row">
+                        <span class="result-label">Monthly Payment (EMI)</span>
+                        <span class="result-value" id="emi-result">₹21,696</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Total Interest Payable</span>
+                        <span class="result-value" id="total-interest">₹27,06,939</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Total Payment (Principal + Interest)</span>
+                        <span class="result-value" id="total-payment">₹52,06,939</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get all input elements
+        const inputs = document.querySelectorAll('#loan-amount, #interest-rate, #loan-tenure');
+
+        // Add event listeners to all inputs
+        inputs.forEach(input => {
+            input.addEventListener('input', calculateEMI);
+        });
+
+        // Also calculate when button is clicked
+        document.getElementById('calculate-btn').addEventListener('click', calculateEMI);
+
+        function calculateEMI() {
+            const principal = parseFloat(document.getElementById('loan-amount').value) || 0;
+            const rate = (parseFloat(document.getElementById('interest-rate').value) || 0) / 1200; // Monthly interest rate
+            const tenure = (parseFloat(document.getElementById('loan-tenure').value) || 0) * 12; // Months
+
+            if (principal > 0 && rate > 0 && tenure > 0) {
+                // EMI calculation formula
+                const emi = principal * rate * Math.pow(1 + rate, tenure) / (Math.pow(1 + rate, tenure) - 1);
+                const totalPayment = emi * tenure;
+                const totalInterest = totalPayment - principal;
+
+                // Format numbers to Indian Rupees
+                document.getElementById('emi-result').textContent = formatCurrency(emi);
+                document.getElementById('total-interest').textContent = formatCurrency(totalInterest);
+                document.getElementById('total-payment').textContent = formatCurrency(totalPayment);
+            }
+        }
+
+        function formatCurrency(num) {
+            return '₹' + Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Initial calculation on page load
+        calculateEMI();
+
+        // Sync loan amount between form and calculator
+        const formLoanAmount = document.getElementById('loan-amount-form');
+        const calcLoanAmount = document.getElementById('loan-amount');
+
+        formLoanAmount.addEventListener('input', function () {
+            calcLoanAmount.value = this.value;
+            calculateEMI();
+        });
+
+        calcLoanAmount.addEventListener('input', function () {
+            formLoanAmount.value = this.value;
+        });
+
+        // Handle occupation field
+        const occupationSelect = document.getElementById('occupation');
+        const otherOccupationContainer = document.getElementById('other-occupation-container');
+        const otherOccupationInput = document.getElementById('other-occupation');
+
+        occupationSelect.addEventListener('change', function () {
+            if (this.value === 'other') {
+                otherOccupationContainer.style.display = 'block';
+                otherOccupationInput.setAttribute('required', 'required');
+            } else {
+                otherOccupationContainer.style.display = 'none';
+                otherOccupationInput.removeAttribute('required');
+                otherOccupationInput.value = ''; // Clear the value when hidden
+            }
+        });
+
+        // Initialize in case 'other' is selected by default (e.g., form validation failed)
+        if (occupationSelect.value === 'other') {
+            otherOccupationContainer.style.display = 'block';
+            otherOccupationInput.setAttribute('required', 'required');
+        }
+
+        // CAPTCHA functionality
+        const captchaImage = document.getElementById('captcha-image');
+        const refreshCaptcha = document.getElementById('refresh-captcha');
+
+        // Function to generate random CAPTCHA
+        function generateCaptcha() {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let captcha = '';
+            for (let i = 0; i < 6; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return captcha;
+        }
+
+        // Set initial CAPTCHA
+        let currentCaptcha = generateCaptcha();
+        captchaImage.textContent = currentCaptcha;
+
+        // Refresh CAPTCHA on click
+        refreshCaptcha.addEventListener('click', function (e) {
+            e.preventDefault();
+            currentCaptcha = generateCaptcha();
+            captchaImage.textContent = currentCaptcha;
+
+            // Add visual feedback
+            captchaImage.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                captchaImage.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+</script>
+{% endblock %}

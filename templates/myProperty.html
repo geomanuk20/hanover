@@ -1,0 +1,434 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Property Listing | HANOVER{% endblock %}
+
+{% block content %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .breadcrumb {
+            padding: 15px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .account-container {
+            display: flex;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .sidebar h3 {
+            padding: 0 20px 15px;
+            border-bottom: 1px solid #3d5166;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar li:hover {
+            background: #3d5166;
+        }
+        
+        .sidebar li.active {
+            background: #3498db;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .section-header h2 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        
+        .add-property-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .add-property-btn:hover {
+            background: #2980b9;
+        }
+        
+        /* Compact Property Cards */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .property-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .property-image-container {
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+            background-color: #f7f7f7;
+        }
+        
+        .property-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .property-card:hover .property-image {
+            transform: scale(1.03);
+        }
+        
+        .property-details {
+            padding: 15px;
+        }
+        
+        .property-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .property-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+        
+        .property-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .property-meta-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .property-meta-item i {
+            margin-right: 4px;
+            font-size: 12px;
+            color: #3498db;
+        }
+        
+        .property-description {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            /* -webkit-line-clamp: 2; */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .property-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .property-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            background-color: #e6f7ee;
+            color: #00a651;
+        }
+        
+        .status-inactive {
+            background-color: #fdeaea;
+            color: #e74c3c;
+        }
+        
+        .property-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+        
+        .view-btn {
+            background-color: #f0f0f0;
+            color: #333;
+            border-color: #ddd;
+        }
+        
+        .view-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .edit-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        
+        .empty-state-description {
+            margin-bottom: 20px;
+            color: #666;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .account-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .property-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .property-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}">Home</a> / <a href="{% url 'myAccount' %}">My Account</a> / <a href="#">My Property Listings</a>
+        </div>
+        
+        <div class="account-container">
+            <div class="sidebar">
+                <h3><a style="text-decoration: none; color: white;" href="{% url 'myAccount' %}">Dashboard</a></h3>
+                <ul>
+                    <li class="active">My Properties</li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'myRequirement' %}">My Requirements</a></li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'manageMedia' %}">Manage Media</a></li>
+                    <li>My Messages</li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'paymentHistory' %}">Payment History</a></li>
+                    <li>Saved Searches</li>
+                    <li>Contact Views</li>
+                    <li>My Alerts</li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'myWatchlist' %}">My Watchlist</a></li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <div class="section-header">
+                    <h2>My Property Listings</h2>
+                    <a style="text-decoration: none; color: white;" href="{% url 'postProperty' %}">
+                        <button class="add-property-btn">
+                            + Add Property
+                        </button>
+                    </a>
+                </div>
+                
+                {% if properties %}
+                <div class="property-grid">
+                    {% for property in properties %}
+                    <div class="property-card">
+                        <div class="property-image-container">
+                            {% if property.image1 %}
+                                <img src="{{ property.image1.url }}" alt="{{ property.title }}" class="property-image">
+                            {% else %}
+                                <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #ccc;">
+                                    <i class="fas fa-home" style="font-size: 40px;"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="property-details">
+                            <h3 class="property-title">{{ property.title|default:"Untitled Property" }}</h3>
+                            
+                            <div class="property-price">
+                                {% if property.price_range %}
+                                    ₹ {{ property.price_range }}
+                                {% else %}
+                                    Price on request
+                                {% endif %}
+                            </div>
+                            
+                            <div class="property-meta">
+                                <span class="property-meta-item">
+                                    <i class="fas fa-home"></i> {{ property.property_type|truncatechars:15 }}
+                                </span>
+                                <span class="property-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i> {{ property.city|default:"-"|truncatechars:12 }}
+                                </span>
+                            </div>
+                            
+                            <div class="property-description">
+                                {{ property.description|truncatechars:80 }}
+                            </div>
+                            
+                            <div class="property-footer">
+                                {% if property.is_active %}
+                                <span class="property-status status-active">Active</span>
+                                {% else %}
+                                <span class="property-status status-inactive">Inactive</span>
+                                {% endif %}
+                                
+                                <div class="property-actions">
+                                    <a href="{% url 'edit_property' property.id %}" class="action-btn view-btn">View</a>
+                                    <a href="{% url 'property_detail' property.id %}" class="action-btn edit-btn">Edit</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3 class="empty-state-title">No Properties Found</h3>
+                    <p class="empty-state-description">
+                        You haven't listed any properties yet. Start by adding your first property to get it in front of potential buyers or renters.
+                    </p>
+                    <a href="{% url 'postProperty' %}" class="add-property-btn">Add New Property</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

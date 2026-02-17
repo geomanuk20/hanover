@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buy Our Services | HANOVER{% endblock %}
+
+{% block content %}
+<div class="services-container">
+    <style>
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Breadcrumb styles */
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-separator {
+            color: #999;
+        }
+
+        /* Header styles */
+        .page-header {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0 0 20px 0;
+            color: #222;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Intro section */
+        .intro-section {
+            margin-bottom: 40px;
+        }
+
+        .intro-section p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #444;
+        }
+
+        /* Divider */
+        .divider {
+            border-top: 1px solid #ddd;
+            margin: 30px 0;
+        }
+
+        /* Packages section */
+        .packages-header {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #222;
+        }
+
+        .packages-description {
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #444;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .package-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .package-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .package-duration {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .package-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 20px 0;
+        }
+
+        .package-features {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .package-features li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .package-features li:before {
+            content: "✓";
+            color: #4CAF50;
+            position: absolute;
+            left: 0;
+        }
+
+        .package-button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .package-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .services-container {
+                padding: 15px;
+            }
+
+            .page-header {
+                font-size: 24px;
+            }
+
+            .packages-header {
+                font-size: 22px;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                font-size: 22px;
+            }
+
+            .package-card {
+                padding: 20px;
+            }
+
+            .package-name {
+                font-size: 18px;
+            }
+
+            .package-price {
+                font-size: 22px;
+            }
+        }
+    </style>
+
+    <nav id="mainNav">
+        <ul class="nav-links">
+            <li><a href="{% url 'propertysale'%}">Properties for Sale</a></li>
+            <li><a href="{% url 'propertyRent' %}">Properties for Rent</a></li>
+            <li><a href="{% url 'propertyPremium'%}">Premium projects</a></li>
+            <li><a href="{% url 'finance' %}">Finance Center</a></li>
+            <li><a href="{% url 'ourService' %}">Our Services</a></li>
+            <li><a href="{% url 'contactUs' %}">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <strong>Buy Our Services</strong>
+    </div>
+
+    <h1 class="page-header">Buy Our Services</h1>
+
+    <!-- Intro Section -->
+    <div class="intro-section">
+        <p><strong>Advertise your property on Kerala's exclusive real estate portal.</strong></p>
+        <p>Be it a flat, villa, land, office space or any other property, we will help you find the right buyers. You can go for a month long listing or even go for 3 months listings, that best suits your requirement. Choose from our custom packages that will fetch you the best response from our visitors, both in India and Overseas.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Packages Section -->
+    <h2 class="packages-header">Packages & Pricing</h2>
+    <p class="packages-description">Reach out to more property seekers! Our specially designed and exclusive services will help you Sell or Rent your property faster.</p>
+
+    <div class="packages-grid">
+        <!-- Basic Package -->
+        <div class="package-card">
+            <div class="package-name">Basic</div>
+            <div class="package-duration">1 Month Listing</div>
+            <ul class="package-features">
+                <li>Property listing on our portal</li>
+                <li>Basic visibility in search results</li>
+                <li>Contact form for inquiries</li>
+                <li>1 photo upload</li>
+            </ul>
+            <div class="package-price">₹250/-</div>
+            <a href="#" class="package-button">Select Plan</a>
+        </div>
+
+        <!-- Featured Package -->
+        <div class="package-card">
+            <div class="package-name">Featured</div>
+            <div class="package-duration">1 Month Listing</div>
+            <ul class="package-features">
+                <li>All Basic features plus:</li>
+                <li>Featured placement on homepage</li>
+                <li>Priority in search results</li>
+                <li>Up to 5 photos</li>
+                <li>Highlighted listing</li>
+            </ul>
+            <div class="package-price">₹1500/-</div>
+            <a href="#" class="package-button">Select Plan</a>
+        </div>
+
+        <!-- Active Support Package -->
+        <div class="package-card">
+            <div class="package-name">Active Support</div>
+            <div class="package-duration">3 Month Listing</div>
+            <ul class="package-features">
+                <li>All Featured features plus:</li>
+                <li>3 months extended visibility</li>
+                <li>Dedicated support agent</li>
+                <li>Up to 20 photos</li>
+                <li>Virtual tour option</li>
+                <li>Social media promotion</li>
+            </ul>
+            <div class="package-price">₹10000/-</div>
+            <a href="#" class="package-button">Select Plan</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,500 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Update Profile | HANOVER{% endblock %}
+
+{% block content %}
+    <div class="profile-update-container">
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}">Home</a> / <a href="{% url 'myAccount' %}">My Account</a> / Update Profile
+        </div>
+        
+        <form id="profileForm" method="post" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+            
+            <h2 class="form-title">Profile Information</h2>
+            
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <h3 class="section-title">Personal Information</h3>
+                
+                <div class="form-group">
+                    <label for="id_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="id_name" name="name" value="{{ form.name.value|default:'' }}" required>
+                    {% if form.name.errors %}
+                        <div class="error-message">{{ form.name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="id_email" name="email" value="{{ form.email.value|default:'' }}" required>
+                    {% if form.email.errors %}
+                        <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_phone" class="form-label">Mobile Number</label>
+                    <input type="tel" class="form-control" id="id_phone" name="phone" value="{{ form.phone.value|default:'' }}" required>
+                    {% if form.phone.errors %}
+                        <div class="error-message">{{ form.phone.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_landline" class="form-label">Landline</label>
+                    <input type="tel" class="form-control" id="id_landline" name="landline" value="{{ form.landline.value|default:'' }}">
+                    {% if form.landline.errors %}
+                        <div class="error-message">{{ form.landline.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_customertype" class="form-label">Customer Type</label>
+                    <select class="form-control" id="id_customertype" name="customertype">
+                        <option value="individual" {% if form.customertype.value == 'individual' %}selected{% endif %}>Individual</option>
+                        <option value="business" {% if form.customertype.value == 'business' %}selected{% endif %}>Business</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Profile Picture Section -->
+            <div class="form-section">
+                <h3 class="section-title">Profile Picture</h3>
+                
+                <div class="profile-picture-group">
+                    <div class="current-picture">
+                        {% if request.user.profile_picture %}
+                            <img src="{{ request.user.profile_picture.url }}" alt="Current Profile Picture" id="currentProfilePic">
+                        {% else %}
+                            <div class="default-picture">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="picture-upload">
+                        <label for="id_profile_picture" class="upload-label">Change Picture</label>
+                        <input type="file" id="id_profile_picture" name="profile_picture" accept="image/*">
+                        <small class="form-text">Recommended size: 200x200 pixels</small>
+                        {% if form.profile_picture.errors %}
+                            <div class="error-message">{{ form.profile_picture.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Address Information Section -->
+            <div class="form-section">
+                <h3 class="section-title">Address Information</h3>
+                
+                <div class="form-group">
+                    <label for="id_address" class="form-label">Address</label>
+                    <textarea class="form-control" id="id_address" name="address" rows="3" required>{{ form.address.value|default:'' }}</textarea>
+                    {% if form.address.errors %}
+                        <div class="error-message">{{ form.address.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="id_city" name="city" value="{{ form.city.value|default:'' }}">
+                    {% if form.city.errors %}
+                        <div class="error-message">{{ form.city.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_state" class="form-label">State</label>
+                    <select class="form-control" id="id_state" name="state" required>
+                        <option value="">Select State</option>
+                        <option value="Kerala" {% if form.state.value == 'Kerala' %}selected{% endif %}>Kerala</option>
+                        <option value="Tamil Nadu" {% if form.state.value == 'Tamil Nadu' %}selected{% endif %}>Tamil Nadu</option>
+                        <option value="Karnataka" {% if form.state.value == 'Karnataka' %}selected{% endif %}>Karnataka</option>
+                        <!-- Add other states as needed -->
+                    </select>
+                    {% if form.state.errors %}
+                        <div class="error-message">{{ form.state.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_district" class="form-label">District</label>
+                    <select class="form-control" id="id_district" name="district" required>
+                        <option value="">Select District</option>
+                        {% if form.state.value == 'Kerala' %}
+                            <option value="Alappuzha" {% if form.district.value == 'Alappuzha' %}selected{% endif %}>Alappuzha</option>
+                            <option value="Ernakulam" {% if form.district.value == 'Ernakulam' %}selected{% endif %}>Ernakulam</option>
+                            <!-- Add other Kerala districts -->
+                        {% endif %}
+                    </select>
+                    {% if form.district.errors %}
+                        <div class="error-message">{{ form.district.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_country" class="form-label">Country</label>
+                    <select class="form-control" id="id_country" name="country" required>
+                        <option value="India" {% if form.country.value == 'India' %}selected{% endif %}>India</option>
+                        <option value="USA" {% if form.country.value == 'USA' %}selected{% endif %}>United States</option>
+                        <option value="UK" {% if form.country.value == 'UK' %}selected{% endif %}>United Kingdom</option>
+                    </select>
+                    {% if form.country.errors %}
+                        <div class="error-message">{{ form.country.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+            </div>
+        </form>
+    </div>
+
+    <style>
+        .profile-update-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .breadcrumb {
+            padding: 0.5rem 0;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .profile-form {
+            margin-top: 1.5rem;
+        }
+        
+        .form-title {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+        
+        .section-title {
+            color: #3498db;
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+        }
+        
+        .profile-picture-group {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .current-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .current-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .default-picture {
+            font-size: 5rem;
+            color: #ccc;
+        }
+        
+        .picture-upload {
+            flex: 1;
+        }
+        
+        .upload-label {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #3498db;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .upload-label:hover {
+            background: #2980b9;
+        }
+        
+        #id_profile_picture {
+            display: none;
+        }
+        
+        .form-text {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-update-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+            
+            .profile-picture-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Profile picture preview
+            const profilePictureInput = document.getElementById('id_profile_picture');
+            const currentProfilePic = document.getElementById('currentProfilePic');
+            const defaultPicture = document.querySelector('.default-picture');
+            
+            if (profilePictureInput) {
+                profilePictureInput.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files[0]) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            if (!currentProfilePic) {
+                                const img = document.createElement('img');
+                                img.id = 'currentProfilePic';
+                                img.src = e.target.result;
+                                img.alt = 'Profile Picture Preview';
+                                document.querySelector('.current-picture').appendChild(img);
+                                if (defaultPicture) defaultPicture.style.display = 'none';
+                            } else {
+                                currentProfilePic.src = e.target.result;
+                            }
+                        }
+                        
+                        reader.readAsDataURL(e.target.files[0]);
+                    }
+                });
+            }
+            
+            // State-District dynamic population
+            const stateSelect = document.getElementById('id_state');
+            const districtSelect = document.getElementById('id_district');
+            
+            const stateDistrictMap = {
+                'Kerala': [
+                    'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod',
+                    'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad',
+                    'Pathanamthitta', 'Thiruvananthapuram', 'Thrissur', 'Wayanad'
+                ],
+                'Tamil Nadu': [
+                    'Ariyalur', 'Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore',
+                    'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kancheepuram'
+                    // Add more districts as needed
+                ],
+                'Karnataka': [
+                    'Bangalore Urban', 'Belgaum', 'Bellary', 'Bidar', 'Bijapur',
+                    'Chamarajanagar', 'Chikmagalur', 'Chitradurga', 'Dakshina Kannada'
+                    // Add more districts as needed
+                ]
+            };
+            
+            function updateDistricts() {
+                const selectedState = stateSelect.value;
+                districtSelect.innerHTML = '<option value="">Select District</option>';
+                
+                if (selectedState && stateDistrictMap[selectedState]) {
+                    stateDistrictMap[selectedState].forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district;
+                        option.textContent = district;
+                        // Preselect if this was the previously selected district
+                        if (district === '{{ form.district.value|default:"" }}') {
+                            option.selected = true;
+                        }
+                        districtSelect.appendChild(option);
+                    });
+                }
+            }
+            
+            if (stateSelect) {
+                stateSelect.addEventListener('change', updateDistricts);
+                // Initialize districts on page load
+                updateDistricts();
+            }
+            
+            // Form validation
+            const form = document.getElementById('profileForm');
+            const cancelButton = document.getElementById('cancelButton');
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    let isValid = true;
+                    const requiredFields = form.querySelectorAll('[required]');
+                    
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            field.classList.add('is-invalid');
+                            isValid = false;
+                        } else {
+                            field.classList.remove('is-invalid');
+                        }
+                    });
+                    
+                    // Additional phone number validation
+                    const phoneField = document.getElementById('id_phone');
+                    if (phoneField && phoneField.value.trim() && !/^\d{10}$/.test(phoneField.value.trim())) {
+                        phoneField.classList.add('is-invalid');
+                        const errorMsg = phoneField.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.textContent = 'Please enter a valid 10-digit phone number';
+                        }
+                        isValid = false;
+                    }
+                    
+                    if (!isValid) {
+                        e.preventDefault();
+                        // Scroll to the first invalid field
+                        const firstInvalid = form.querySelector('.is-invalid');
+                        if (firstInvalid) {
+                            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                });
+            }
+            
+            if (cancelButton) {
+                cancelButton.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                        window.location.href = "{% url 'myAccount' %}";
+                    }
+                });
+            }
+            
+            // Remove invalid class when user starts typing
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.classList.contains('is-invalid')) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

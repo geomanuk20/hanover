@@ -1,0 +1,540 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+     <style>
+        /* Form Layout */
+        .form-layout {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 10px 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .breadcrumb strong {
+            color: #495057;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+        }
+        
+        /* Radio Groups */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+        
+        .radio-option input {
+            margin-right: 8px;
+        }
+        
+        /* Property Type Cards */
+        .property-type-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .property-type-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .property-type-card:hover {
+            border-color: #007bff;
+        }
+        
+        .property-type-card.active {
+            border-color: #007bff;
+            background-color: #f0f7ff;
+        }
+        
+        .property-type-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        
+        /* Textareas */
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            min-height: 120px;
+        }
+        
+        .char-count {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f0f7ff;
+        }
+        
+        /* Divider */
+        .divider {
+            border-top: 1px solid #e9ecef;
+            margin: 25px 0;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background-color: #28a745;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Sidebar Menu */
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar li a {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .sidebar li a:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar li.current a {
+            background-color: #e3f2fd;
+            color: #007bff;
+        }
+        
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #495057;
+            font-size: 18px;
+            cursor: pointer;
+            float: right;
+        }
+        
+        /* Price Display */
+        .price-display {
+            padding: 8px 0;
+            font-size: 16px;
+            color: #495057;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .form-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .property-type-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .sidebar ul {
+                display: none;
+            }
+            
+            .sidebar.active ul {
+                display: block;
+            }
+            
+            .property-type-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a> / 
+        <a href="{% url 'myAccount' %}">My Account</a> / 
+        <strong>{% if property %}Edit{% else %}Add{% endif %} Property</strong>
+    </div>
+    
+    <div class="form-layout">
+         <div class="sidebar" id="sidebar">
+            <h3>
+                Dashboard
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </h3>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 20%;"></div>
+            </div>
+            <div class="progress-text">20% Complete</div>
+            
+            <ul>
+                <li class="current">
+                    <a href="#">
+                        <i class="fas fa-check-circle"></i>
+                        Basic Info
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Location Details
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-home"></i>
+                        Property Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-star"></i>
+                        Features & Amenities
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-camera"></i>
+                        Media Upload
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Form Section -->
+        <form method="post" id="property-form">
+            {% csrf_token %}
+            <div class="form-section">
+                <h2>Basic Information</h2>
+                
+                <!-- Display form errors at the top -->
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Please correct the following errors:</strong>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field|title }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <!-- Language Field -->
+                <div class="form-group">
+                    <label class="form-title required-field">Post Property in</label>
+                    <div class="radio-group">
+                        {% for value, label in form.language.field.choices %}
+                        <div class="radio-option">
+                            <input type="radio" id="language-{{ value }}" name="language" value="{{ value }}"
+                                   {% if form.language.value == value or not property and forloop.first %}checked{% endif %}>
+                            <label for="language-{{ value }}">{{ label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Property Type Field -->
+                <div class="form-group">
+                    <label class="form-title required-field">Property Type</label>
+                    <div class="property-type-grid">
+                        {% for value, label in form.property_type.field.choices %}
+                        <div class="property-type-card {% if form.property_type.value == value or not property and forloop.first %}active{% endif %}" 
+                             data-value="{{ value }}">
+                            <img src="{% static 'properties/images/' %}{{ value }}.png" alt="{{ label }}" class="property-type-icon">
+                            <div>{{ label }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" id="property-type" name="property_type" 
+                           value="{{ form.property_type.value|default:'residential-apartment' }}">
+                </div>
+                
+                <div class="divider"></div>
+                
+                <!-- Transaction Type -->
+                <div class="form-group">
+                    <label class="form-title required-field">Transaction Type</label>
+                    <div class="radio-group">
+                        {% for value, label in form.transaction_type.field.choices %}
+                        <div class="radio-option">
+                            <input type="radio" id="transaction-{{ value }}" name="transaction_type" value="{{ value }}"
+                                   {% if form.transaction_type.value == value or not property and forloop.first %}checked{% endif %}>
+                            <label for="transaction-{{ value }}">{{ label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Ownership Type -->
+                <div class="form-group">
+                    <label class="form-title required-field">Ownership Type</label>
+                    <div class="radio-group">
+                        {% for value, label in form.ownership_type.field.choices %}
+                        <div class="radio-option">
+                            <input type="radio" id="ownership-{{ value }}" name="ownership_type" value="{{ value }}"
+                                   {% if form.ownership_type.value == value or not property and forloop.first %}checked{% endif %}>
+                            <label for="ownership-{{ value }}">{{ label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Set Price -->
+                <div class="form-group">
+                    <label class="form-title required-field">Set Price</label>
+                    <div class="radio-group">
+                        {% for value, label in form.set_price.field.choices %}
+                        <div class="radio-option">
+                            <input type="radio" id="set-price-{{ value }}" name="set_price" value="{{ value }}"
+                                   {% if form.set_price.value == value or not property and forloop.first %}checked{% endif %}
+                                   onclick="togglePriceField('{{ value }}')">
+                            <label for="set-price-{{ value }}">{{ label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Price Range (Conditional) -->
+                <div class="form-group" id="price-range-group"
+                     style="{% if form.set_price.value == 'no' %}display: none;{% endif %}">
+                    <label class="form-title">Price Range (₹)</label>
+                    <input type="text" class="form-control" name="price_range" 
+                           value="{{ form.price_range.value|default_if_none:'' }}"
+                           placeholder="e.g., 50,00,000 - 60,00,000">
+                </div>
+                
+                <!-- Property Description -->
+                <div class="form-group">
+                    <label class="form-title required-field">Property Description</label>
+                    <textarea class="form-control" id="property-description" name="property_description" 
+                              placeholder="Describe your property in detail..." 
+                              minlength="50" maxlength="2000" required>{{ form.property_description.value|default_if_none:'' }}</textarea>
+                    <div class="char-count">Minimum 50 and Maximum 2000 characters</div>
+                </div>
+                
+                <!-- Proximity -->
+                <div class="form-group">
+                    <label class="form-title">Proximity to Key Locations</label>
+                    <textarea class="form-control" id="proximity" name="proximity" 
+                              placeholder="Nearby landmarks, transportation, schools, etc..."
+                              maxlength="500">{{ form.proximity.value|default_if_none:'' }}</textarea>
+                    <div class="char-count">Maximum 500 characters</div>
+                </div>
+                
+                <!-- Form Buttons -->
+                <div class="form-group" style="margin-top: 40px; text-align: right;">
+                    <a href="{% if property %}{% url 'property_detail' property.id %}{% else %}{% url 'propertyBasicInfo' %}{% endif %}" 
+                       class="btn-primary btn-outline" style="margin-right: 15px; text-decoration: none;">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn-primary">Save & Continue</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Property type selection
+        const propertyCards = document.querySelectorAll('.property-type-card');
+        const propertyTypeInput = document.getElementById('property-type');
+        
+        // Initialize active state
+        propertyCards.forEach(card => {
+            card.addEventListener('click', function() {
+                propertyCards.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                propertyTypeInput.value = this.getAttribute('data-value');
+            });
+            
+            // Set initial active state
+            if (card.getAttribute('data-value') === propertyTypeInput.value) {
+                card.classList.add('active');
+            }
+        });
+
+        // [Rest of your existing DOMContentLoaded code...]
+    });
+    
+    // Toggle price field visibility
+    function togglePriceField(value) {
+        const priceGroup = document.getElementById('price-range-group');
+        if (value === 'no') {
+            priceGroup.style.display = 'none';
+            priceGroup.querySelector('input').value = '';
+        } else {
+            priceGroup.style.display = 'block';
+        }
+    }
+    
+    // Enhanced form validation
+    document.getElementById('property-form').addEventListener('submit', function(e) {
+        const description = document.getElementById('property-description');
+        if (description.value.length < 50) {
+            e.preventDefault();
+            alert('Please enter at least 50 characters for the property description');
+            description.focus();
+            return;
+        }
+        
+        // Validate required fields
+        const requiredFields = {
+            'language': 'Language',
+            'property_type': 'Property Type',
+            'transaction_type': 'Transaction Type',
+            'ownership_type': 'Ownership Type',
+            'set_price': 'Set Price'
+        };
+        
+        let isValid = true;
+        let firstMissingField = null;
+        
+        for (const [name, label] of Object.entries(requiredFields)) {
+            // Special handling for property_type which is a hidden input
+            if (name === 'property_type') {
+                const propertyType = document.getElementById('property-type').value;
+                if (!propertyType) {
+                    isValid = false;
+                    if (!firstMissingField) firstMissingField = label;
+                }
+            } 
+            // For radio buttons
+            else if (!document.querySelector(`input[name="${name}"]:checked`)) {
+                isValid = false;
+                if (!firstMissingField) firstMissingField = label;
+            }
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert(`Please select a ${firstMissingField} option`);
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,429 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Account | HANOVER{% endblock %}
+
+{% block content %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .breadcrumb {
+            padding: 15px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .account-container {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 100%;
+            background: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            position: relative;
+        }
+        
+        .sidebar h3 {
+            padding: 0 20px 15px;
+            border-bottom: 1px solid #3d5166;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            transition: max-height 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .sidebar li {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .sidebar li:hover {
+            background: #3d5166;
+        }
+        
+        .sidebar li.active {
+            background: #3498db;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .welcome-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .welcome-section h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .edit-profile {
+            color: #3498db;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .edit-profile:hover {
+            text-decoration: underline;
+        }
+        
+        .welcome-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px 30px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .profile-info {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+        
+        .profile-info img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .profile-details h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .profile-details p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #0066cc;
+        }
+        
+        .properties-section {
+            margin-top: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .section-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .section-header h3 {
+            color: #2c3e50;
+        }
+        
+        .section-tabs {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .section-tabs button {
+            padding: 8px 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .section-tabs button.active {
+            color: #0066cc;
+            border-bottom: 2px solid #0066cc;
+        }
+        
+        .add-property-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+        
+        .add-property-btn:hover {
+            background: #2980b9;
+        }
+        
+        .quick-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        @media (min-width: 576px) {
+            .quick-links {
+                flex-direction: row;
+            }
+        }
+        
+        .quick-link {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .quick-link:hover {
+            background: #eee;
+        }
+        
+        /* Mobile styles */
+        @media (max-width: 767px) {
+            .account-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .sidebar ul {
+                max-height: 0;
+            }
+            
+            .sidebar.active ul {
+                max-height: 1000px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .welcome-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .section-tabs {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* Desktop styles */
+        @media (min-width: 768px) {
+            .account-container {
+                flex-direction: row;
+            }
+            
+            .sidebar {
+                width: 250px;
+            }
+            
+            .sidebar ul {
+                max-height: none !important;
+                display: block !important;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a> / <a href="#">My Account</a>
+        </div>
+        
+        <h1>My Account Overview</h1>
+        
+        <div class="account-container">
+            <div class="sidebar" id="sidebar">
+                <h3>
+                    Dashboard
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </h3>
+                <ul>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'myProperty' %}">My Properties</a></li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'myRequirement' %}">My Requirements</a></li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'manageMedia' %}">Manage Media</a></li>
+                    <li>My Messages</li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'paymentHistory' %}">Payment History</a></li>
+                    <li>Saved Searches</li>
+                    <li>Contact Views</li>
+                    <li>My Alerts</li>
+                    <li><a style="text-decoration: none; color: white;" href="{% url 'myWatchlist' %}">My Watchlist</a></li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <div class="welcome-section">
+                    
+                    <h2>
+                        Welcome {{ user.first_name|default:user.name }} {{ user.last_name }}
+                        <a href="{% url 'profile' %}" class="edit-profile">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </h2>
+                    <div class="welcome-meta">
+                        <span>Last Login: {{ user.last_login|date:"F j, Y, g:i a" }}</span>
+                        <span>Profile Created on: {{ user.date_joined|date:"d / M / Y" }}</span>
+                    </div>
+                    
+                    <div class="profile-info">
+                        {% if request.user.profile_picture %}
+                            <img src="{{ request.user.profile_picture.url }}" alt="Current Profile Picture" id="currentProfilePic">
+                        {% else %}
+                            <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Picture" id="currentProfilePic">
+                        {% endif %}
+                        <div class="profile-details">
+                            <h3>{{ user.first_name|default:user.username }} {{ user.last_name }}</h3>
+                            {% if user.profile.address %}
+                            <p>{{ user.profile.address }}</p>
+                            {% endif %}
+                            <div class="contact-info">
+                                <span>{{ user.email }}</span>
+                                {% if user.profile.phone_number %}
+                                <span>{{ user.profile.phone_number }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="properties-section">
+                    <div class="section-header">
+                        <div class="section-tabs">
+                            <button class="active">My Properties</button>
+                            <button>Contact Views</button>
+                        </div>
+                        <button class="add-property-btn">
+                            <i class="fas fa-plus"></i> Add Property
+                        </button>
+                    </div>
+                    
+                    <!-- Property listings would go here -->
+                    
+                    <div class="quick-links">
+                        <div class="quick-link">Saved Searches</div>
+                        <div class="quick-link">Responses</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome for the edit icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+            
+            // Close menu when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 767 && 
+                    !sidebar.contains(event.target) && 
+                    event.target !== mobileMenuBtn) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+    </script>
+{% endblock %}

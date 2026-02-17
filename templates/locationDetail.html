@@ -1,0 +1,828 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <style>
+        /* Form Layout */
+        .form-layout {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 10px 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .breadcrumb strong {
+            color: #495057;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+        }
+        
+        /* Input Fields */
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            height: 38px;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px 12px;
+            padding-right: 32px;
+        }
+        
+        /* Form Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .form-grid-full {
+            grid-column: span 2;
+        }
+        
+        /* Map Styles */
+        .map-container {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #ced4da;
+            background-color: #f8f9fa;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .map-btn {
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            color: #495057;
+        }
+
+        .map-btn i {
+            font-size: 14px;
+        }
+
+        .map-btn.primary {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .location-instructions {
+            font-size: 13px;
+            color: #6c757d;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background-color: #28a745;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Sidebar Menu */
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar li a {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .sidebar li a:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar li.current a {
+            background-color: #e3f2fd;
+            color: #007bff;
+        }
+        
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #495057;
+            font-size: 18px;
+            cursor: pointer;
+            float: right;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+        
+        .btn-outline-primary {
+            background-color: transparent;
+            border: 1px solid #007bff;
+            color: #007bff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: #f0f7ff;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .form-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .sidebar ul {
+                display: none;
+            }
+            
+            .sidebar.active ul {
+                display: block;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid-full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a> / 
+        <a href="{% url 'myAccount' %}">My Account</a> / 
+        <strong>{% if property %}Edit{% else %}Add{% endif %} Property</strong>
+    </div>
+    
+    <div class="form-layout">
+        <div class="sidebar" id="sidebar">
+            <h3>
+                Dashboard
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </h3>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 20%;"></div>
+            </div>
+            <div class="progress-text">20% Complete</div>
+            
+            <ul>
+                <li>
+                    <a href="{% url 'propertyBasicInfo' %}">
+                        <i class="fas fa-check-circle"></i>
+                        Basic Info
+                    </a>
+                </li>
+                <li class="current">
+                    <a href="#">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Location Details
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-home"></i>
+                        Property Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-star"></i>
+                        Features & Amenities
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-camera"></i>
+                        Media Upload
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Form Section -->
+        <form method="post" id="location-form">
+            {% csrf_token %}
+            <div class="form-section">
+                <h2>Location Details</h2>
+                
+                <!-- Display form errors at the top -->
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Please correct the following errors:</strong>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field|title }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <div class="form-grid">
+                    <!-- Country Field -->
+                    <div class="form-group">
+                        <label class="form-title required-field">Country</label>
+                        <select class="form-control" name="country" id="country">
+                            <option value="India" {% if form.country.value == 'India' %}selected{% endif %}>India</option>
+                        </select>
+                    </div>
+                    
+                    <!-- State Field -->
+                    <div class="form-group">
+                        <label class="form-title required-field">State</label>
+                        <select class="form-control" name="state" id="state">
+                            <option value="Kerala" {% if form.state.value == 'Kerala' %}selected{% endif %}>Kerala</option>
+                        </select>
+                    </div>
+                    
+                    <!-- District Field -->
+                    <div class="form-group">
+                        <label class="form-title required-field">District</label>
+                        <select class="form-control" name="district" id="district" required>
+                            <option value="" disabled>Select District</option>
+                            <option value="thiruvananthapuram" data-coords="8.5241,76.9366" {% if form.district.value == 'thiruvananthapuram' %}selected{% endif %}>Thiruvananthapuram</option>
+                            <option value="kollam" data-coords="8.8932,76.6141" {% if form.district.value == 'kollam' %}selected{% endif %}>Kollam</option>
+                            <option value="pathanamthitta" data-coords="9.2648,76.7870" {% if form.district.value == 'pathanamthitta' %}selected{% endif %}>Pathanamthitta</option>
+                            <option value="alappuzha" data-coords="9.4980,76.3388" {% if form.district.value == 'alappuzha' %}selected{% endif %}>Alappuzha</option>
+                            <option value="kottayam" data-coords="9.5916,76.5222" {% if form.district.value == 'kottayam' %}selected{% endif %}>Kottayam</option>
+                            <option value="idukki" data-coords="9.8496,76.9726" {% if form.district.value == 'idukki' %}selected{% endif %}>Idukki</option>
+                            <option value="ernakulam" data-coords="9.9816,76.2999" {% if form.district.value == 'ernakulam' %}selected{% endif %}>Ernakulam</option>
+                            <option value="thrissur" data-coords="10.5276,76.2144" {% if form.district.value == 'thrissur' %}selected{% endif %}>Thrissur</option>
+                            <option value="palakkad" data-coords="10.7867,76.6548" {% if form.district.value == 'palakkad' %}selected{% endif %}>Palakkad</option>
+                            <option value="malappuram" data-coords="11.0510,76.0711" {% if form.district.value == 'malappuram' %}selected{% endif %}>Malappuram</option>
+                            <option value="kozhikode" data-coords="11.2588,75.7804" {% if form.district.value == 'kozhikode' %}selected{% endif %}>Kozhikode</option>
+                            <option value="wayanad" data-coords="11.6850,76.1320" {% if form.district.value == 'wayanad' %}selected{% endif %}>Wayanad</option>
+                            <option value="kannur" data-coords="11.8745,75.3704" {% if form.district.value == 'kannur' %}selected{% endif %}>Kannur</option>
+                            <option value="kasaragod" data-coords="12.4996,74.9869" {% if form.district.value == 'kasaragod' %}selected{% endif %}>Kasaragod</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Town Field -->
+                    <div class="form-group">
+                        <label class="form-title required-field">Town</label>
+                        <select class="form-control" name="town" id="town" required {% if not form.district.value %}disabled{% endif %}>
+                            {% if not form.district.value %}
+                                <option value="" selected disabled>Select District First</option>
+                            {% else %}
+                                <option value="" disabled>Select Town</option>
+                                {% if form.district.value == 'thiruvananthapuram' %}
+                                    <option value="tvm_city" data-coords="8.5241,76.9366" {% if form.town.value == 'tvm_city' %}selected{% endif %}>Thiruvananthapuram City</option>
+                                    <option value="attingal" data-coords="8.6960,76.8140" {% if form.town.value == 'attingal' %}selected{% endif %}>Attingal</option>
+                                {% elif form.district.value == 'kollam' %}
+                                    <option value="kollam_city" data-coords="8.8932,76.6141" {% if form.town.value == 'kollam_city' %}selected{% endif %}>Kollam City</option>
+                                    <option value="karunagapally" data-coords="9.0395,76.5364" {% if form.town.value == 'karunagapally' %}selected{% endif %}>Karunagapally</option>
+                                {% elif form.district.value == 'ernakulam' %}
+                                    <option value="kochi" data-coords="9.9312,76.2673" {% if form.town.value == 'kochi' %}selected{% endif %}>Kochi</option>
+                                    <option value="aluva" data-coords="10.1073,76.3516" {% if form.town.value == 'aluva' %}selected{% endif %}>Aluva</option>
+                                {% elif form.district.value == 'thrissur' %}
+                                    <option value="thrissur_city" data-coords="10.5276,76.2144" {% if form.town.value == 'thrissur_city' %}selected{% endif %}>Thrissur City</option>
+                                    <option value="guruvayur" data-coords="10.5942,76.0414" {% if form.town.value == 'guruvayur' %}selected{% endif %}>Guruvayur</option>
+                                {% endif %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+                    <!-- Locality Field -->
+                    <div class="form-group">
+                        <label class="form-title required-field">Locality</label>
+                        <select class="form-control" name="locality" id="locality" required {% if not form.town.value %}disabled{% endif %}>
+                            {% if not form.town.value %}
+                                <option value="" selected disabled>Select Town First</option>
+                            {% else %}
+                                <option value="" disabled>Select Locality</option>
+                                {% if form.district.value == 'thiruvananthapuram' and form.town.value == 'tvm_city' %}
+                                    <option value="kowdiar" data-coords="8.5306,76.9669" {% if form.locality.value == 'kowdiar' %}selected{% endif %}>Kowdiar</option>
+                                    <option value="pattom" data-coords="8.5412,76.9534" {% if form.locality.value == 'pattom' %}selected{% endif %}>Pattom</option>
+                                    <option value="nedumangad" data-coords="8.6027,77.0011" {% if form.locality.value == 'nedumangad' %}selected{% endif %}>Nedumangad</option>
+                                {% elif form.district.value == 'thiruvananthapuram' and form.town.value == 'attingal' %}
+                                    <option value="varkala" data-coords="8.7333,76.7167" {% if form.locality.value == 'varkala' %}selected{% endif %}>Varkala</option>
+                                    <option value="kilimanoor" data-coords="8.7618,76.8769" {% if form.locality.value == 'kilimanoor' %}selected{% endif %}>Kilimanoor</option>
+                                {% elif form.district.value == 'kollam' and form.town.value == 'kollam_city' %}
+                                    <option value="asramam" data-coords="8.8889,76.6000" {% if form.locality.value == 'asramam' %}selected{% endif %}>Asramam</option>
+                                    <option value="tangasseri" data-coords="8.8833,76.5667" {% if form.locality.value == 'tangasseri' %}selected{% endif %}>Tangasseri</option>
+                                {% elif form.district.value == 'kollam' and form.town.value == 'karunagapally' %}
+                                    <option value="oyoor" data-coords="9.0667,76.5333" {% if form.locality.value == 'oyoor' %}selected{% endif %}>Oyoor</option>
+                                    <option value="clappana" data-coords="9.0500,76.5167" {% if form.locality.value == 'clappana' %}selected{% endif %}>Clappana</option>
+                                {% elif form.district.value == 'ernakulam' and form.town.value == 'kochi' %}
+                                    <option value="fortkochi" data-coords="9.9616,76.2442" {% if form.locality.value == 'fortkochi' %}selected{% endif %}>Fort Kochi</option>
+                                    <option value="marine_drive" data-coords="9.9676,76.2802" {% if form.locality.value == 'marine_drive' %}selected{% endif %}>Marine Drive</option>
+                                    <option value="edapally" data-coords="10.0239,76.3079" {% if form.locality.value == 'edapally' %}selected{% endif %}>Edapally</option>
+                                {% elif form.district.value == 'ernakulam' and form.town.value == 'aluva' %}
+                                    <option value="kalamassery" data-coords="10.0614,76.3261" {% if form.locality.value == 'kalamassery' %}selected{% endif %}>Kalamassery</option>
+                                    <option value="kakkanad" data-coords="10.0169,76.3658" {% if form.locality.value == 'kakkanad' %}selected{% endif %}>Kakkanad</option>
+                                {% elif form.district.value == 'thrissur' and form.town.value == 'thrissur_city' %}
+                                    <option value="round" data-coords="10.5243,76.2143" {% if form.locality.value == 'round' %}selected{% endif %}>Swaraj Round</option>
+                                    <option value="puzhakkal" data-coords="10.5417,76.2000" {% if form.locality.value == 'puzhakkal' %}selected{% endif %}>Puzhakkal</option>
+                                {% elif form.district.value == 'thrissur' and form.town.value == 'guruvayur' %}
+                                    <option value="temple" data-coords="10.5945,76.0425" {% if form.locality.value == 'temple' %}selected{% endif %}>Temple East</option>
+                                    <option value="punnathurkotta" data-coords="10.5833,76.0500" {% if form.locality.value == 'punnathurkotta' %}selected{% endif %}>Punnathurkotta</option>
+                                {% endif %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+                    <!-- Street Field -->
+                    <div class="form-group">
+                        <label class="form-title">Street</label>
+                        <input type="text" class="form-control" name="street" id="street" 
+                               placeholder="Enter street name" value="{{ form.street.value|default_if_none:'' }}">
+                    </div>
+                    
+                    <!-- Map Container - Full Width -->
+                    <div class="form-group form-grid-full">
+                        <label class="form-title">Property Location on Map</label>
+                        <div class="map-controls">
+                            <button type="button" id="detect-location" class="map-btn primary">
+                                <i class="fas fa-location-arrow"></i> Detect My Location
+                            </button>
+                            <button type="button" id="satellite-view" class="map-btn">
+                                <i class="fas fa-satellite"></i> Satellite View
+                            </button>
+                            <button type="button" id="street-view" class="map-btn" style="display: none;">
+                                <i class="fas fa-map"></i> Street Map
+                            </button>
+                        </div>
+                        <div class="map-container" id="map"></div>
+                        <div class="location-instructions">
+                            The marker might not be placed in the exact location. If you wish, you can place the marker 
+                            at the exact location. Use the mouse to pick up the marker and drag it to your exact location.
+                        </div>
+                        <input type="hidden" id="latitude" name="latitude" value="{{ form.latitude.value|default_if_none:'' }}">
+                        <input type="hidden" id="longitude" name="longitude" value="{{ form.longitude.value|default_if_none:'' }}">
+                    </div>
+                </div>
+                
+                <!-- Form Buttons -->
+                <div class="form-group" style="margin-top: 30px; text-align: right;">
+                    <a href="{% url 'propertyBasicInfo' %}" class="btn-outline-primary" style="margin-right: 15px;">
+                        Back
+                    </a>
+                    <button type="submit" class="btn-primary">Save & Continue</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Include Leaflet CSS and JS for maps -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Include Leaflet plugins -->
+<script src="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol@0.72.0/dist/L.Control.Locate.min.css" />
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (mobileMenuBtn && sidebar) {
+            mobileMenuBtn.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+            });
+        }
+        
+        // Kerala location data structure
+        const keralaLocations = {
+            'thiruvananthapuram': {
+                towns: [
+                    {id: 'tvm_city', name: 'Thiruvananthapuram City', coords: '8.5241,76.9366', 
+                     localities: [
+                         {id: 'kowdiar', name: 'Kowdiar', coords: '8.5306,76.9669'},
+                         {id: 'pattom', name: 'Pattom', coords: '8.5412,76.9534'},
+                         {id: 'nedumangad', name: 'Nedumangad', coords: '8.6027,77.0011'}
+                     ]},
+                    {id: 'attingal', name: 'Attingal', coords: '8.6960,76.8140',
+                     localities: [
+                         {id: 'varkala', name: 'Varkala', coords: '8.7333,76.7167'},
+                         {id: 'kilimanoor', name: 'Kilimanoor', coords: '8.7618,76.8769'}
+                     ]}
+                ]
+            },
+            'kollam': {
+                towns: [
+                    {id: 'kollam_city', name: 'Kollam City', coords: '8.8932,76.6141',
+                     localities: [
+                         {id: 'asramam', name: 'Asramam', coords: '8.8889,76.6000'},
+                         {id: 'tangasseri', name: 'Tangasseri', coords: '8.8833,76.5667'}
+                     ]},
+                    {id: 'karunagapally', name: 'Karunagapally', coords: '9.0395,76.5364',
+                     localities: [
+                         {id: 'oyoor', name: 'Oyoor', coords: '9.0667,76.5333'},
+                         {id: 'clappana', name: 'Clappana', coords: '9.0500,76.5167'}
+                     ]}
+                ]
+            },
+            'ernakulam': {
+                towns: [
+                    {id: 'kochi', name: 'Kochi', coords: '9.9312,76.2673',
+                     localities: [
+                         {id: 'fortkochi', name: 'Fort Kochi', coords: '9.9616,76.2442'},
+                         {id: 'marine_drive', name: 'Marine Drive', coords: '9.9676,76.2802'},
+                         {id: 'edapally', name: 'Edapally', coords: '10.0239,76.3079'}
+                     ]},
+                    {id: 'aluva', name: 'Aluva', coords: '10.1073,76.3516',
+                     localities: [
+                         {id: 'kalamassery', name: 'Kalamassery', coords: '10.0614,76.3261'},
+                         {id: 'kakkanad', name: 'Kakkanad', coords: '10.0169,76.3658'}
+                     ]}
+                ]
+            },
+            'thrissur': {
+                towns: [
+                    {id: 'thrissur_city', name: 'Thrissur City', coords: '10.5276,76.2144',
+                     localities: [
+                         {id: 'round', name: 'Swaraj Round', coords: '10.5243,76.2143'},
+                         {id: 'puzhakkal', name: 'Puzhakkal', coords: '10.5417,76.2000'}
+                     ]},
+                    {id: 'guruvayur', name: 'Guruvayur', coords: '10.5942,76.0414',
+                     localities: [
+                         {id: 'temple', name: 'Temple East', coords: '10.5945,76.0425'},
+                         {id: 'punnathurkotta', name: 'Punnathurkotta', coords: '10.5833,76.0500'}
+                     ]}
+                ]
+            }
+        };
+
+        // Initialize the map
+        const map = L.map('map').setView([10.8505, 76.2711], 12); // Default to Kerala coordinates
+        
+        // Add base layers
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+        
+        // Add a marker
+        let marker;
+        const latitude = parseFloat("{{ form.latitude.value|default_if_none:'' }}") || 10.8505;
+        const longitude = parseFloat("{{ form.longitude.value|default_if_none:'' }}") || 76.2711;
+        
+        if (latitude && longitude) {
+            marker = L.marker([latitude, longitude], {draggable: true}).addTo(map);
+            map.setView([latitude, longitude], 15);
+        } else {
+            marker = L.marker([10.8505, 76.2711], {draggable: true}).addTo(map);
+        }
+        
+        // Update marker position when dragged
+        marker.on('dragend', function(e) {
+            const position = marker.getLatLng();
+            document.getElementById('latitude').value = position.lat;
+            document.getElementById('longitude').value = position.lng;
+        });
+        
+        // Add locate control
+        const lc = L.control.locate({
+            position: 'topright',
+            strings: {
+                title: "Show me where I am"
+            },
+            locateOptions: {
+                maxZoom: 16
+            }
+        }).addTo(map);
+        
+        // Function to update map position based on address
+        function updateMapFromAddress() {
+            const district = document.getElementById('district').value;
+            const town = document.getElementById('town').value;
+            const locality = document.getElementById('locality').value;
+            
+            // Priority: locality > town > district
+            let coords = null;
+            
+            if (locality && locality !== "") {
+                const selectedOption = document.querySelector('#locality option:checked');
+                coords = selectedOption.getAttribute('data-coords');
+            } else if (town && town !== "") {
+                const selectedOption = document.querySelector('#town option:checked');
+                coords = selectedOption.getAttribute('data-coords');
+            } else if (district && district !== "") {
+                const selectedOption = document.querySelector('#district option:checked');
+                coords = selectedOption.getAttribute('data-coords');
+            }
+            
+            if (coords) {
+                const [lat, lng] = coords.split(',').map(Number);
+                marker.setLatLng([lat, lng]);
+                map.setView([lat, lng], 14);
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+            }
+        }
+        
+        // Function to populate towns based on district selection
+        function populateTowns(districtId) {
+            const townSelect = document.getElementById('town');
+            townSelect.innerHTML = '<option value="" selected disabled>Select Town</option>';
+            
+            if (districtId && keralaLocations[districtId]) {
+                keralaLocations[districtId].towns.forEach(town => {
+                    const option = document.createElement('option');
+                    option.value = town.id;
+                    option.textContent = town.name;
+                    option.setAttribute('data-coords', town.coords);
+                    townSelect.appendChild(option);
+                });
+                townSelect.disabled = false;
+                
+                // If editing an existing property and town is set, select it
+                const storedTown = "{{ form.town.value|default_if_none:'' }}";
+                if (storedTown) {
+                    townSelect.value = storedTown;
+                    // Trigger change event to populate localities
+                    const event = new Event('change');
+                    townSelect.dispatchEvent(event);
+                }
+            } else {
+                townSelect.disabled = true;
+            }
+            
+            // Reset locality dropdown
+            document.getElementById('locality').innerHTML = '<option value="" selected disabled>Select Town First</option>';
+            document.getElementById('locality').disabled = true;
+        }
+
+        // Function to populate localities based on town selection
+        function populateLocalities(districtId, townId) {
+            const localitySelect = document.getElementById('locality');
+            localitySelect.innerHTML = '<option value="" selected disabled>Select Locality</option>';
+            
+            if (districtId && townId && keralaLocations[districtId]) {
+                const selectedTown = keralaLocations[districtId].towns.find(t => t.id === townId);
+                if (selectedTown) {
+                    selectedTown.localities.forEach(locality => {
+                        const option = document.createElement('option');
+                        option.value = locality.id;
+                        option.textContent = locality.name;
+                        option.setAttribute('data-coords', locality.coords);
+                        localitySelect.appendChild(option);
+                    });
+                    localitySelect.disabled = false;
+                    
+                    // If editing an existing property and locality is set, select it
+                    const storedLocality = "{{ form.locality.value|default_if_none:'' }}";
+                    if (storedLocality) {
+                        localitySelect.value = storedLocality;
+                        // Update map based on selected locality
+                        updateMapFromAddress();
+                    }
+                    return;
+                }
+            }
+            localitySelect.disabled = true;
+        }
+
+        // If editing an existing property and district is set, populate towns and localities
+        const storedDistrict = "{{ form.district.value|default_if_none:'' }}";
+        if (storedDistrict) {
+            document.getElementById('district').value = storedDistrict;
+            populateTowns(storedDistrict);
+        }
+
+        // District change handler
+        document.getElementById('district').addEventListener('change', function() {
+            const districtId = this.value;
+            populateTowns(districtId);
+            updateMapFromAddress();
+        });
+
+        // Town change handler
+        document.getElementById('town').addEventListener('change', function() {
+            const districtId = document.getElementById('district').value;
+            const townId = this.value;
+            populateLocalities(districtId, townId);
+            updateMapFromAddress();
+        });
+
+        // Locality change handler
+        document.getElementById('locality').addEventListener('change', function() {
+            updateMapFromAddress();
+        });
+
+        // Detect location button
+        document.getElementById('detect-location').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // Update marker position
+                        marker.setLatLng([lat, lng]);
+                        map.setView([lat, lng], 15);
+                        
+                        // Update hidden fields
+                        document.getElementById('latitude').value = lat;
+                        document.getElementById('longitude').value = lng;
+                        
+                        // Reverse geocode to get address details
+                        reverseGeocode({lat: lat, lng: lng});
+                    },
+                    function(error) {
+                        alert('Error getting your location: ' + error.message);
+                    },
+                    { enableHighAccuracy: true }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        });
+        
+        // Toggle satellite view
+        const satelliteBtn = document.getElementById('satellite-view');
+        const streetBtn = document.getElementById('street-view');
+        
+        satelliteBtn.addEventListener('click', function() {
+            map.removeLayer(osmLayer);
+            map.addLayer(satelliteLayer);
+            satelliteBtn.style.display = 'none';
+            streetBtn.style.display = 'flex';
+        });
+        
+        streetBtn.addEventListener('click', function() {
+            map.removeLayer(satelliteLayer);
+            map.addLayer(osmLayer);
+            streetBtn.style.display = 'none';
+            satelliteBtn.style.display = 'flex';
+        });
+        
+        // Reverse geocode function to get address details
+        function reverseGeocode(position) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.address) {
+                        // Update form fields based on geocoded data
+                        if (data.address.road) {
+                            document.getElementById('street').value = data.address.road;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during reverse geocoding:', error);
+                });
+        }
+        
+        // Form validation
+        document.getElementById('location-form').addEventListener('submit', function(e) {
+            const requiredFields = [
+                'country', 'state', 'district', 'town', 'locality'
+            ];
+            
+            let isValid = true;
+            let firstMissingField = null;
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value) {
+                    isValid = false;
+                    if (!firstMissingField) {
+                        firstMissingField = fieldId;
+                    }
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                const fieldName = firstMissingField.replace(/-/g, ' ');
+                alert(`Please select a ${fieldName} option`);
+            }
+        });
+    });
+</script>
+{% endblock %}

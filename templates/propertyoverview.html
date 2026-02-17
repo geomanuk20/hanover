@@ -1,0 +1,752 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ property.property_type_display }} | HANOVER{% endblock %}
+
+{% block content %}
+<div class="container">
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Breadcrumb styles */
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .breadcrumb a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb span.separator {
+            margin: 0 5px;
+            color: #999;
+        }
+        
+        /* Property header styles */
+        .property-header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .property-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #222;
+            line-height: 1.3;
+            padding-right: 40px;
+        }
+        
+        .property-location {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Image gallery styles */
+        .property-gallery {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .main-image-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 60px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .thumbnail:hover {
+            border-color: #4CAF50;
+        }
+        
+        .thumbnail.active {
+            border-color: #4CAF50;
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 15px;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+        
+        .gallery-nav button {
+            pointer-events: all;
+            background: rgba(255,255,255,0.8);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-nav button:hover {
+            background: rgba(255,255,255,1);
+        }
+        
+        /* Property description styles */
+        .property-description {
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #444;
+        }
+        
+        .divider {
+            border-top: 1px solid #ddd;
+            margin: 25px 0;
+        }
+        
+        .location-highlight {
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        /* Details table styles */
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        
+        .details-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        .details-table td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #555;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 30px 0 15px 0;
+            color: #222;
+        }
+        
+        /* Price and loan styles */
+        .property-price {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .loan-link {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        
+        .loan-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Property details grid */
+        .property-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-item {
+            padding: 10px;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .contact-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .contact-button:hover {
+            background-color: #45a049;
+        }
+        
+        .secondary-button {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 14px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .secondary-button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        /* Favorite button */
+        .favorite-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .favorite-btn.active {
+            color: #ff4757;
+        }
+        
+        /* Share dropdown */
+        .share-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .share-dropdown {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 150px;
+            z-index: 10;
+        }
+        
+        .share-container:hover .share-dropdown {
+            display: flex;
+        }
+        
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.2s;
+        }
+        
+        .share-option:hover {
+            background: #f5f5f5;
+        }
+        
+        .emoji {
+            font-size: 20px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .property-title {
+                font-size: 24px;
+            }
+            
+            .main-image-container {
+                height: 350px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .property-title {
+                font-size: 22px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .main-image-container {
+                height: 300px;
+            }
+            
+            .property-price {
+                font-size: 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .property-details {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .details-table td {
+                display: block;
+                width: 100%;
+                border-bottom: none;
+                padding: 5px 0;
+            }
+            
+            .details-table td:first-child {
+                padding-top: 10px;
+                border-bottom: 1px solid #f0f0f0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-image-container {
+                height: 250px;
+            }
+            
+            .property-title {
+                font-size: 20px;
+            }
+            
+            .property-location {
+                font-size: 16px;
+            }
+            
+            .property-description, 
+            .location-highlight {
+                font-size: 15px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .contact-button, .secondary-button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .gallery-nav button {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+
+    <nav id="mainNav">
+        <ul class="nav-links">
+            <li><a href="{% url 'propertysale'%}">Properties for Sale</a></li>
+            <li><a href="{% url 'propertyRent' %}">Properties for Rent</a></li>
+            <li><a href="{% url 'propertyPremium'%}">Premium projects</a></li>
+            <li><a href="{% url 'finance' %}">Finance Center</a></li>
+            <li><a href="{% url 'ourService' %}">Our Services</a></li>
+            <li><a href="{% url 'contactUs' %}">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <a href="{% url 'home'%}">Home</a>
+        <span class="separator">/</span>
+        <a href="{% if property.transaction_type == 'sale' %}{% url 'propertysale'%}{% else %}{% url 'propertyRent' %}{% endif %}">
+            {% if property.transaction_type == 'sale' %}Sale{% else %}Rent{% endif %}
+        </a>
+        <span class="separator">/</span>
+        <a href="#">{{ property.get_property_type_display }}</a>
+        <span class="separator">/</span>
+        <a href="#">{{ property.district }}</a>
+        <span class="separator">/</span>
+        <span>{{ property.locality }}</span>    
+    </div>
+    
+    <!-- Property Header with Title and Favorite Button -->
+    <div class="property-header">
+        <h1 class="property-title">{{ property.get_property_type_display }} for {{ property.get_transaction_type_display }} in {{ property.locality }}, {{ property.district }}</h1>
+        <button class="favorite-btn" id="favoriteBtn">♥</button>
+        <div class="property-location">
+            <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Location" width="18">
+            {{ property.locality }}, {{ property.district }}, {{ property.state }}
+        </div>
+    </div>
+    
+    <!-- Image Gallery -->
+    <div class="property-gallery">
+        <div class="main-image-container">
+            {% if property.image1 %}
+                <img src="{{ property.image1.url }}" 
+                     alt="{{ property.get_property_type_display }} in {{ property.district }}" 
+                     class="main-image"
+                     id="mainImage">
+            {% else %}
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" 
+                     alt="Default property image" 
+                     class="main-image"
+                     id="mainImage">
+            {% endif %}
+            <div class="gallery-nav">
+                <button id="prevBtn">❮</button>
+                <button id="nextBtn">❯</button>
+            </div>
+        </div>
+        
+        <div class="thumbnail-container">
+            {% if property.image1 %}
+            <div class="thumbnail active" data-image="{{ property.image1.url }}">
+                <img src="{{ property.image1.url }}" alt="Property Image 1">
+            </div>
+            {% endif %}
+            {% if property.image2 %}
+            <div class="thumbnail" data-image="{{ property.image2.url }}">
+                <img src="{{ property.image2.url }}" alt="Property Image 2">
+            </div>
+            {% endif %}
+            {% if property.image3 %}
+            <div class="thumbnail" data-image="{{ property.image3.url }}">
+                <img src="{{ property.image3.url }}" alt="Property Image 3">
+            </div>
+            {% endif %}
+            {% if property.image4 %}
+            <div class="thumbnail" data-image="{{ property.image4.url }}">
+                <img src="{{ property.image4.url }}" alt="Property Image 4">
+            </div>
+            {% endif %}
+            {% if property.image5 %}
+            <div class="thumbnail" data-image="{{ property.image5.url }}">
+                <img src="{{ property.image5.url }}" alt="Property Image 5">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Property Description -->
+    <div class="property-description">
+        <h2>Property Description</h2>
+        <p>
+            {{ property.property_description|linebreaksbr }}
+        </p>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <!-- Location Highlight -->
+    {% if property.proximity %}
+    <p class="location-highlight">{{ property.proximity }}</p>
+    {% endif %}
+    
+    <!-- Property Details Table -->
+    <table class="details-table">
+        <tr>
+            <td>Ownership</td>
+            <td>: {{ property.get_ownership_type_display }}</td>
+            <td>Plot Area</td>
+            <td>: {{ property.plot_area }} {{ property.get_plot_area_unit_display }}</td>
+        </tr>
+        <tr>
+            <td>State</td>
+            <td>: {{ property.state }}</td>
+            <td>District</td>
+            <td>: {{ property.district }}</td>
+        </tr>
+        <tr>
+            <td>Town</td>
+            <td>: {{ property.town }}</td>
+            <td>Locality</td>
+            <td>: {{ property.locality }}</td>
+        </tr>
+        <tr>
+            <td>Street</td>
+            <td>: {{ property.street }}</td>
+            <td>Address</td>
+            <td>: {{ property.street }}, {{ property.locality }}, {{ property.town }}, {{ property.district }}, {{ property.state }}</td>
+        </tr>
+    </table>
+    
+    <div class="divider"></div>
+    
+    <!-- Location Type Section -->
+    <h2 class="section-title">Location Type</h2>
+    <table class="details-table">
+        <tr>
+            <td>Gated Property</td>
+            <td>: {% if property.gated_property %}Yes{% else %}No{% endif %}</td>
+            <td>In Residential Colony</td>
+            <td>: {% if property.residential_colony %}Yes{% else %}No{% endif %}</td>
+        </tr>
+    </table>
+    
+    <!-- Price Section -->
+    <div class="property-price">
+        {% if property.set_price == 'yes' %}
+            ₹{{ property.price_range }}
+        {% else %}
+            Price on Request
+        {% endif %}
+        <a href="{% url 'finance' %}" class="loan-link">Require a loan?</a>
+    </div>
+    
+    <!-- Additional Property Details Grid -->
+    <div class="property-details">
+        <div class="detail-item">
+            <div class="detail-label">Property ID</div>
+            <div class="detail-value">{{ property.id }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Ownership</div>
+            <div class="detail-value">{{ property.get_ownership_type_display }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Posted on</div>
+            <div class="detail-value">{{ property.created_at|date:"d/M/Y" }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Views</div>
+            <div class="detail-value">{{ property.views }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Land Area</div>
+            <div class="detail-value">{{ property.plot_area }} {{ property.get_plot_area_unit_display }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Active Support</div>
+            <div class="detail-value">Yes</div>
+        </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="mailto:{{ property.email }}?subject=Regarding Property ID {{ property.id }}" class="contact-button">
+            <span class="emoji">📧</span>
+            Contact via Email
+        </a>
+        
+        <a href="tel:{{ property.mobile1 }}" class="contact-button">
+            <span class="emoji">📞</span>
+            Call {{ property.mobile1 }}
+        </a>
+        
+        <a href="#" class="secondary-button" id="savePropertyBtn">
+            <span class="emoji">📌</span>
+            Save Property
+        </a>
+        
+        <div class="share-container">
+            <a href="#" class="secondary-button" id="shareBtn">
+                <span class="emoji">🔄</span>
+                Share Property
+            </a>
+            <div class="share-dropdown">
+                <a href="#" class="share-option" onclick="shareOnFacebook()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="20" alt="Facebook">
+                    Facebook
+                </a>
+                <a href="#" class="share-option" onclick="shareOnTwitter()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" width="20" alt="Twitter">
+                    Twitter
+                </a>
+                <a href="#" class="share-option" onclick="shareOnWhatsApp()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="20" alt="WhatsApp">
+                    WhatsApp
+                </a>
+                <a href="#" class="share-option" onclick="copyLink()">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1621/1621635.png" width="20" alt="Copy Link">
+                    Copy Link
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Image gallery functionality
+    const mainImage = document.getElementById('mainImage');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentImageIndex = 0;
+    
+    // Get all image URLs from thumbnails
+    const images = Array.from(thumbnails).map(thumb => thumb.dataset.image);
+
+    // Thumbnail click handler
+    thumbnails.forEach((thumb, index) => {
+        thumb.addEventListener('click', () => {
+            mainImage.src = thumb.dataset.image;
+            currentImageIndex = index;
+            updateThumbnailSelection();
+        });
+    });
+
+    // Previous button handler
+    prevBtn.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        mainImage.src = images[currentImageIndex];
+        updateThumbnailSelection();
+    });
+
+    // Next button handler
+    nextBtn.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        mainImage.src = images[currentImageIndex];
+        updateThumbnailSelection();
+    });
+
+    // Update thumbnail selection
+    function updateThumbnailSelection() {
+        thumbnails.forEach((thumb, index) => {
+            if (index === currentImageIndex) {
+                thumb.classList.add('active');
+            } else {
+                thumb.classList.remove('active');
+            }
+        });
+    }
+
+    // Favorite button functionality
+    const favoriteBtn = document.getElementById('favoriteBtn');
+    favoriteBtn.addEventListener('click', () => {
+        favoriteBtn.classList.toggle('active');
+        // You would typically make an AJAX call here to update favorites
+    });
+
+    // Save property button functionality
+    const savePropertyBtn = document.getElementById('savePropertyBtn');
+    savePropertyBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        favoriteBtn.classList.toggle('active');
+        if (favoriteBtn.classList.contains('active')) {
+            savePropertyBtn.innerHTML = '<span class="emoji">📌</span> Saved';
+        } else {
+            savePropertyBtn.innerHTML = '<span class="emoji">📌</span> Save Property';
+        }
+    });
+
+    // Share functionality
+    function shareOnFacebook() {
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    }
+
+    function shareOnTwitter() {
+        const text = encodeURIComponent('Check out this property on HANOVER');
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+    }
+
+    function shareOnWhatsApp() {
+        const text = encodeURIComponent('Check out this property on HANOVER: ' + window.location.href);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Link copied to clipboard!');
+        });
+    }
+</script>
+{% endblock %}

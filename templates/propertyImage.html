@@ -1,0 +1,542 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <style>
+        /* Form Layout */
+        .form-layout {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 10px 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .breadcrumb strong {
+            color: #495057;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-title {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+        }
+        
+        /* Input Fields */
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            height: 38px;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px 12px;
+            padding-right: 32px;
+        }
+        
+        /* Form Grid Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .form-grid-full {
+            grid-column: span 2;
+        }
+        
+        /* Image Upload Specific Styles */
+        .upload-area {
+            border: 2px dashed #ced4da;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: #007bff;
+            background-color: #f8fbff;
+        }
+        
+        .upload-area i {
+            font-size: 48px;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        
+        .upload-area p {
+            margin: 5px 0;
+        }
+        
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            height: 180px;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-actions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            padding: 8px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .preview-item:hover .preview-actions {
+            transform: translateY(0);
+        }
+        
+        .preview-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .preview-btn:hover {
+            color: #007bff;
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #28a745;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            grid-column: 1 / -1;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            background-color: #28a745;
+        }
+        
+        .progress-text {
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Sidebar Menu */
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar li a {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .sidebar li a:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar li.current a {
+            background-color: #e3f2fd;
+            color: #007bff;
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+        
+        .btn-outline-primary {
+            background-color: transparent;
+            border: 1px solid #007bff;
+            color: #007bff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: #f0f7ff;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .form-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid-full {
+                grid-column: span 1;
+            }
+        }
+    </style>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a> / 
+        <a href="{% url 'myAccount' %}">My Account</a> / 
+        <strong>{% if property %}Edit{% else %}Add{% endif %} Property</strong>
+    </div>
+    
+    <div class="form-layout">
+        <div class="sidebar">
+            <h3>Dashboard</h3>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 80%;"></div>
+            </div>
+            <div class="progress-text">80% Complete</div>
+            
+            <ul>
+                <li>
+                    <a href="{% url 'propertyBasicInfo' %}">
+                        <i class="fas fa-check-circle"></i>
+                        Basic Info
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Location Details
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-home"></i>
+                        Property Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <i class="fas fa-star"></i>
+                        Property Details
+                    </a>
+                </li>
+                <li class="current">
+                    <a href="">
+                        <i class="fas fa-camera"></i>
+                        Media Upload
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Form Section -->
+        <div class="form-section">
+            <h2>Upload Property Images</h2>
+            <p class="text-muted">Upload high-quality images of your property (JPEG or PNG, max 10MB each).</p>
+            
+            <form method="post" enctype="multipart/form-data" id="imageUploadForm">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    <!-- Image 1 -->
+                    <div class="form-group">
+                        <label class="form-title">Image 1</label>
+                        <input type="file" name="image1" class="form-control" accept="image/*">
+                        {% if property.image1 %}
+                            <div class="preview-item">
+                                <img src="{{ property.image1.url }}" alt="Property image 1">
+                                <div class="preview-actions">
+                                    <button type="button" class="preview-btn set-featured" data-image-num="1">
+                                        <i class="fas fa-star"></i> Set as Featured
+                                    </button>
+                                </div>
+                                {% if property.featured_image == 1 %}
+                                    <span class="featured-badge">Featured</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Image 2 -->
+                    <div class="form-group">
+                        <label class="form-title">Image 2</label>
+                        <input type="file" name="image2" class="form-control" accept="image/*">
+                        {% if property.image2 %}
+                            <div class="preview-item">
+                                <img src="{{ property.image2.url }}" alt="Property image 2">
+                                <div class="preview-actions">
+                                    <button type="button" class="preview-btn set-featured" data-image-num="2">
+                                        <i class="fas fa-star"></i> Set as Featured
+                                    </button>
+                                </div>
+                                {% if property.featured_image == 2 %}
+                                    <span class="featured-badge">Featured</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Image 3 -->
+                    <div class="form-group">
+                        <label class="form-title">Image 3</label>
+                        <input type="file" name="image3" class="form-control" accept="image/*">
+                        {% if property.image3 %}
+                            <div class="preview-item">
+                                <img src="{{ property.image3.url }}" alt="Property image 3">
+                                <div class="preview-actions">
+                                    <button type="button" class="preview-btn set-featured" data-image-num="3">
+                                        <i class="fas fa-star"></i> Set as Featured
+                                    </button>
+                                </div>
+                                {% if property.featured_image == 3 %}
+                                    <span class="featured-badge">Featured</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Image 4 -->
+                    <div class="form-group">
+                        <label class="form-title">Image 4</label>
+                        <input type="file" name="image4" class="form-control" accept="image/*">
+                        {% if property.image4 %}
+                            <div class="preview-item">
+                                <img src="{{ property.image4.url }}" alt="Property image 4">
+                                <div class="preview-actions">
+                                    <button type="button" class="preview-btn set-featured" data-image-num="4">
+                                        <i class="fas fa-star"></i> Set as Featured
+                                    </button>
+                                </div>
+                                {% if property.featured_image == 4 %}
+                                    <span class="featured-badge">Featured</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Image 5 -->
+                    <div class="form-group">
+                        <label class="form-title">Image 5</label>
+                        <input type="file" name="image5" class="form-control" accept="image/*">
+                        {% if property.image5 %}
+                            <div class="preview-item">
+                                <img src="{{ property.image5.url }}" alt="Property image 5">
+                                <div class="preview-actions">
+                                    <button type="button" class="preview-btn set-featured" data-image-num="5">
+                                        <i class="fas fa-star"></i> Set as Featured
+                                    </button>
+                                </div>
+                                {% if property.featured_image == 5 %}
+                                    <span class="featured-badge">Featured</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Hidden field for featured image -->
+                <input type="hidden" id="featuredImage" name="featured_image" value="{{ property.featured_image|default:1 }}">
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <i class="fas fa-save mr-2"></i> Save & Continue
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set featured image
+        document.querySelectorAll('.set-featured').forEach(button => {
+            button.addEventListener('click', function() {
+                const imageNum = this.dataset.imageNum;
+                
+                // Remove all featured badges
+                document.querySelectorAll('.featured-badge').forEach(badge => {
+                    badge.remove();
+                });
+                
+                // Add featured badge to selected image
+                const previewItem = this.closest('.preview-item');
+                previewItem.insertAdjacentHTML('afterbegin', '<span class="featured-badge">Featured</span>');
+                
+                // Update hidden input field
+                document.getElementById('featuredImage').value = imageNum;
+            });
+        });
+        
+        // Preview images when files are selected
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    const formGroup = this.closest('.form-group');
+                    
+                    // Remove existing preview if any
+                    const existingPreview = formGroup.querySelector('.preview-item');
+                    if (existingPreview) {
+                        existingPreview.remove();
+                    }
+                    
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        const imageNum = input.name.replace('image', '');
+                        previewItem.innerHTML = `
+                            <img src="${e.target.result}" alt="Preview">
+                            <div class="preview-actions">
+                                <button type="button" class="preview-btn set-featured" data-image-num="${imageNum}">
+                                    <i class="fas fa-star"></i> Set as Featured
+                                </button>
+                            </div>
+                        `;
+                        formGroup.appendChild(previewItem);
+                        
+                        // Add click event to the new button
+                        previewItem.querySelector('.set-featured').addEventListener('click', function() {
+                            document.getElementById('featuredImage').value = imageNum;
+                            
+                            // Remove all featured badges
+                            document.querySelectorAll('.featured-badge').forEach(badge => {
+                                badge.remove();
+                            });
+                            
+                            // Add featured badge to selected image
+                            previewItem.insertAdjacentHTML('afterbegin', '<span class="featured-badge">Featured</span>');
+                        });
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

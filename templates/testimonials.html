@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Testimonials{% endblock %}
+
+
+{% block content %}
+
+<nav id="mainNav">
+        <ul class="nav-links">
+            <li><a href="{% url 'propertysale'%}">Properties for Sale</a></li>
+            <li><a href="{% url 'propertyRent' %}">Properties for Rent</a></li>
+            <li><a href="{% url 'propertyPremium'%}">Premium projects</a></li>
+            <li><a href="{% url 'finance' %}">Finance Center</a></li>
+            <li><a href="{% url 'ourService' %}">Our Services</a></li>
+            <li><a href="{% url 'contactUs' %}">Contact Us</a></li>
+        </ul>
+    </nav>
+<div class="breadcrumb-container">
+    <div class="container">
+        <a href="{% url 'home' %}" class="breadcrumb-link">Home</a>
+        <span class="breadcrumb-separator">/</span>
+        <span class="breadcrumb-current">Testimonials</span>
+    </div>
+</div>
+
+<!-- Main Testimonials Content -->
+<div class="testimonials-main-container">
+    <div class="container">
+        <h1 class="testimonials-title">Customer Testimonials</h1>
+        <p class="testimonials-subtitle">Hear what our clients say about their experience with us</p>
+        
+        <div class="testimonials-grid">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card">
+                <div class="user-info">
+                    <div class="user-avatar">AK</div>
+                    <div class="user-details">
+                        <div class="user-name">ANISH K M</div>
+                        <div class="user-location">Kochi, Kerala</div>
+                        <div class="user-email">anj****@*****in</div>
+                    </div>
+                </div>
+                <div class="rating">★★★★★</div>
+                <p class="testimonial-text short">
+                    It just took 30 seconds for me to find the right house through helloaddress.com...
+                </p>
+                <p class="testimonial-text full">
+                    It just took 30 seconds for me to find the right house through helloaddress.com. Large number of listings,
+                    good navigation and the green layouts makes it incredibly easy to browse properties. The customer support
+                    was exceptional when I had questions about a listing. I found my dream home within a week of using the
+                    platform!
+                </p>
+                <span class="read-more">Read More</span>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card">
+                <div class="user-info">
+                    <div class="user-avatar">HP</div>
+                    <div class="user-details">
+                        <div class="user-name">HIRANNYA KALESH P</div>
+                        <div class="user-location">Trivandrum, Kerala</div>
+                        <div class="user-email">phk****@*****com</div>
+                    </div>
+                </div>
+                <div class="rating">★★★★★</div>
+                <p class="testimonial-text short">
+                    Hello Address helped me to find out a residential plot within in my budget at Trivandrum...
+                </p>
+                <p class="testimonial-text full">
+                    Hello Address helped me to find out a residential plot within in my budget at Trivandrum. The detailed
+                    filters allowed me to narrow down exactly what I was looking for. The verification process gave me
+                    confidence in the listings. I would certainly refer hello address to my friends and family looking for
+                    property in Kerala. The entire process was transparent and hassle-free.
+                </p>
+                <span class="read-more">Read More</span>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card">
+                <div class="user-info">
+                    <div class="user-avatar">JA</div>
+                    <div class="user-details">
+                        <div class="user-name">JO'S ALUKAS</div>
+                        <div class="user-location">Malappuram, Kerala</div>
+                        <div class="user-email">mar****@***********com</div>
+                    </div>
+                </div>
+                <div class="rating">★★★★☆</div>
+                <p class="testimonial-text short">
+                    The Management & Staff<br>
+                    Malaysia Manarama<br><br>
+                    We appreciate Malaysia Manarama and its team for the fantastic work they are doing for promoting our...
+                </p>
+                <p class="testimonial-text full">
+                    The Management & Staff<br>
+                    Malaysia Manarama<br><br>
+                    We appreciate Malaysia Manarama and its team for the fantastic work they are doing for promoting our
+                    properties. Their platform has significantly increased our visibility in the Kerala market. The analytics
+                    dashboard provides valuable insights about potential buyers. The professional photography service they
+                    offered showcased our properties in the best possible light.
+                </p>
+                <span class="read-more">Read More</span>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* Breadcrumb Styles */
+    .breadcrumb-container {
+        background-color: #f8f9fa;
+        padding: 15px 0;
+        margin-bottom: 30px;
+    }
+    
+    .breadcrumb-link {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .breadcrumb-separator {
+        margin: 0 8px;
+        color: #6c757d;
+        font-size: 14px;
+    }
+    
+    .breadcrumb-current {
+        color: #6c757d;
+        font-size: 14px;
+    }
+    
+    /* Testimonials Styles */
+    .testimonials-main-container {
+        padding: 20px 0 50px;
+    }
+    
+    .testimonials-title {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #343a40;
+        line-height: 1.2;
+    }
+    
+    .testimonials-subtitle {
+        font-size: 1rem;
+        color: #6c757d;
+        margin-bottom: 30px;
+        line-height: 1.4;
+    }
+    
+    .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .testimonial-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        padding: 20px;
+        transition: transform 0.3s ease;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .rating {
+        color: #ffc107;
+        margin: 10px 0;
+        font-size: 1rem;
+    }
+    
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .user-name {
+        font-size: 16px;
+    }
+    
+    .user-location, .user-email {
+        font-size: 14px;
+    }
+    
+    .testimonial-text {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .read-more {
+        font-size: 14px;
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 15px;
+        }
+        
+        .testimonials-title {
+            font-size: 1.5rem;
+        }
+        
+        .testimonials-subtitle {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .testimonials-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .testimonial-card {
+            padding: 15px;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            font-size: 14px;
+        }
+        
+        .user-name {
+            font-size: 15px;
+        }
+        
+        .user-location, .user-email {
+            font-size: 13px;
+        }
+        
+        .breadcrumb-link, 
+        .breadcrumb-separator, 
+        .breadcrumb-current {
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .testimonials-title {
+            font-size: 1.3rem;
+        }
+        
+        .testimonials-subtitle {
+            font-size: 0.85rem;
+        }
+        
+        .testimonial-card {
+            padding: 12px;
+        }
+        
+        .user-info {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .user-details {
+            margin-top: 8px;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Read More/Less functionality
+    const readMoreButtons = document.querySelectorAll('.read-more');
+    
+    readMoreButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const card = this.closest('.testimonial-card');
+            const shortText = card.querySelector('.short');
+            const fullText = card.querySelector('.full');
+            
+            if (fullText.style.display === 'block') {
+                fullText.style.display = 'none';
+                shortText.style.display = 'block';
+                this.textContent = 'Read More';
+            } else {
+                fullText.style.display = 'block';
+                shortText.style.display = 'none';
+                this.textContent = 'Read Less';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
